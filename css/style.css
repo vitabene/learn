@@ -1,0 +1,89 @@
+body, nav, ul, table {
+  margin: 0;
+  padding: 0; }
+
+body {
+  background: url("../assets/congpent.png"); }
+
+nav {
+  background: #118877;
+  width: 100%;
+  position: fixed; }
+
+ul {
+  margin: auto; }
+
+main {
+  position: absolute;
+  margin-top: 5em;
+  text-align: left;
+  font-size: small; }
+  main h1, main p {
+    padding: 2em;
+    font-size: 1.5em; }
+  main a {
+    color: black; }
+
+a {
+  text-decoration: none;
+  color: #fff; }
+
+@font-face {
+  font-family: 'customFont';
+  src: url(http://fonts.googleapis.com/css?family=Raleway); }
+ul li {
+  display: inline-block;
+  min-width: 4em;
+  font-size: 2em;
+  line-height: 1.5em;
+  background: #494949;
+  color: #f9f9f9;
+  padding: .3em 1em; }
+  ul li:hover {
+    background: #216886; }
+
+.revealed {
+  display: block; }
+
+.hidden {
+  display: none; }
+
+#backbutton {
+  position: fixed;
+  background: #F15454;
+  width: 100px;
+  height: 50px;
+  line-height: 50px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 1px 1px 1px #000; }
+
+#clock {
+  font: bold 24pt sans;
+  background: #E3D394;
+  padding: 10px;
+  border: dashed black 1px;
+  border-radius: 3px; }
+
+#learn main {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 200px;
+  text-align: center; }
+#learn input, #learn button {
+  border: none; }
+#learn .pair-list {
+  background: #9E2626;
+  width: 30%;
+  margin: 10px;
+  margin-left: 35%;
+  height: auto; }
+  #learn .pair-list table {
+    width: 100%;
+    color: white;
+    table-layout: fixed; }
+#learn .del-row-button {
+  width: 100%; }
+
+/*# sourceMappingURL=style.css.map */
