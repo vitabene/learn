@@ -1,8 +1,10 @@
-{"pairs":[
-	{ "key": "author", "value": ["work"]},
-	{ "key": "author", "value": ["work"]},
-	{ "key": "author", "value": ["work"]},
-	{ "key": "author", "value": ["work"]},
-	{ "key": "author", "value": ["work"]},
-	{ "key": "author", "value": ["work"]}
-]}
+{
+	"pairs":[
+		{ "key": "author", "value": ["work"]},
+		{ "key": "author", "value": ["work"]},
+		{ "key": "author", "value": ["work"]},
+		{ "key": "author", "value": ["work"]},
+		{ "key": "author", "value": ["work"]},
+		{ "key": "author", "value": ["work"]}
+	]
+}

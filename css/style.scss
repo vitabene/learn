@@ -9,9 +9,22 @@ nav {
   background: #118877;
   width: 100%;
   position: fixed;
+  & ul li {
+    display: inline-block;
+    min-width: 4em;
+    font-size: 2em;
+    line-height: 1.5em;
+    background: #494949;
+    color: #f9f9f9;
+    padding: .3em 1em;
+    &:hover {
+      background: #216886;
+    }
+  }
 }
 ul {
   margin: auto;
+  list-style: none;
 }
 main {
   position: absolute;
@@ -34,18 +47,7 @@ a {
   font-family:'customFont';
   src:url(http://fonts.googleapis.com/css?family=Raleway);
 }
-ul li {
-  display: inline-block;
-  min-width: 4em;
-  font-size: 2em;
-  line-height: 1.5em;
-  background: #494949;
-  color: #f9f9f9;
-  padding: .3em 1em;
-  &:hover {
-    background: #216886;
-  }
-}
+
 .revealed {
   display: block;
 }
@@ -88,13 +90,26 @@ ul li {
     margin: 10px;
     margin-left: 35%;
     height: auto;
+    overflow: auto;
     & table {
       width: 100%;
       color: white;
       table-layout: fixed;
     }
+    .leftcol, .rightcol {
+      float: left;
+      width: 50%;
+    }
   }
   .del-row-button {
     width: 100%;
+  }
+  .num-of-pairs {
+    color: white;
+    & input {
+      text-align: right;
+    }
+  }
+  .controls {
   }
 }
