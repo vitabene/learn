@@ -84,11 +84,11 @@ a {
   input, button {
     border: none;
   }
-  .pair-list {
+  #pair-list {
     background: #9E2626;
-    width: 30%;
+    width: 40%;
     margin: 10px;
-    margin-left: 35%;
+    margin-left: 30%;
     height: auto;
     overflow: auto;
     & table {
@@ -99,6 +99,10 @@ a {
     .leftcol, .rightcol {
       float: left;
       width: 50%;
+    }
+    li {
+      background: #D5A2A2;
+      margin: 10px 25px;
     }
   }
   .del-row-button {

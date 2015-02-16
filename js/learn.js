@@ -1,3 +1,7 @@
+var pairDatabase = [["Lorem", "Ipsum"], ["Dog", "Woof"], ["Cat", "Miau"], ["Bacon", "Fat"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"]];
+
+var minPairsGenerated = 5, pairsInUse = [], connection = [], connections = 0;
+
 document.addEventListener( "DOMContentLoaded", init);
 
 function init() {
@@ -7,30 +11,59 @@ function init() {
 			addPair();
 		}
 	}*/
+
+	/*window.onbeforeunload = function(e) {
+	    return "Sure you want to leave?";
+	}*/
+
+	document.getElementById("pair-list").addEventListener("click", function(e) {
+        if (e.target && e.target.nodeName === "LI") {
+            makeConnection();
+        }
+    })
 }
 
-var pairDatabase = [["Lorem", "Ipsum"], ["Dog", "Woof"], ["Cat", "Miau"], ["Bacon", "Fat"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"]];
+function makeConnection() {
 
-var minPairsGenerated = 5;
+}
 
 function generatePairs() {
-	var numberOfPairs = parseInt(document.getElementsByTagName("input")[name="num-of-pairs"].value);
+	var numberOfPairs = +document.getElementsByTagName("input")[name="num-of-pairs"].value;
 
 	var pairsChosen = [];
 
 	while (numberOfPairs !== (pairsChosen.length)) {
 		var randomNumber = Math.floor((Math.random() * pairDatabase.length));
-
-		if (pairsChosen.indexOf(randomNumber) === -1) {
-			pairsChosen.push(randomNumber);
-		}
+		if (pairsChosen.indexOf(randomNumber) === -1) pairsChosen.push(randomNumber);
 	}
-	console.log(pairsChosen);
 
+	for (i = 0; i < pairsChosen.length; i++) pairsInUse.push(pairDatabase[pairsChosen[i]]);
 
+	var values = [];
+
+	for (i = 0; i < pairsInUse.length; i++)	values[i] = pairsInUse[i][1];
+
+	shuffleArray(values);
+
+	var leftcol = document.getElementsByClassName("leftcol")[0];
+	var rightcol = document.getElementsByClassName("rightcol")[0];
+
+	for (i = 0; i < numberOfPairs; i++) {
+		var key = document.createElement("li");
+		key.innerHTML = pairsInUse[i][0];
+		key.setAttribute("data-key", i);
+		leftcol.appendChild(key);
+
+		var value = document.createElement("li");
+		value.innerHTML = values[i];
+		rightcol.appendChild(value);
+	}
 }
 
-
+function shuffleArray(a)	{
+	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
+	return a;
+}
 
 
 
@@ -101,8 +134,4 @@ function addRow(pair) {
 	cell2.innerHTML = pair.index;
 	cell3.innerHTML = "<button class='del-row-button' onclick='deleteRow(this)'>delete</button>"
 	}
-}*/
-
-/*window.onbeforeunload = function(e) {
-    return "Sure you want to leave?";
 }*/

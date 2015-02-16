@@ -21,20 +21,16 @@
     		<input type="number" name="num-of-pairs" value="6" placeholder="5">
     		<button onclick="generatePairs()">set</button>
     	</div>
-    	<div class="pair-list">
+    	<div id="pair-list">
     		<table id="pair-table"></table>
 
-    		<div class="leftcol">
-    			<ul>
-    			</ul>
-    		</div>
+    		<ul class="leftcol">
+    		</ul>
 
-    		<div class="rightcol">
-    			<ul>
-    			</ul>
-    		</div>
+    		<ul  class="rightcol">
+    		</ul>
     	</div>
 
-	</main>
+    </main>
 </body>
 </html>

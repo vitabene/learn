@@ -73,20 +73,23 @@ a {
   text-align: center; }
 #learn input, #learn button {
   border: none; }
-#learn .pair-list {
+#learn #pair-list {
   background: #9E2626;
-  width: 30%;
+  width: 40%;
   margin: 10px;
-  margin-left: 35%;
+  margin-left: 30%;
   height: auto;
   overflow: auto; }
-  #learn .pair-list table {
+  #learn #pair-list table {
     width: 100%;
     color: white;
     table-layout: fixed; }
-  #learn .pair-list .leftcol, #learn .pair-list .rightcol {
+  #learn #pair-list .leftcol, #learn #pair-list .rightcol {
     float: left;
     width: 50%; }
+  #learn #pair-list li {
+    background: #D5A2A2;
+    margin: 10px 25px; }
 #learn .del-row-button {
   width: 100%; }
 #learn .num-of-pairs {
