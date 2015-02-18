@@ -1,6 +1,6 @@
 var pairDatabase = [["Lorem", "Ipsum"], ["Dog", "Woof"], ["Cat", "Miau"], ["Bacon", "Fat"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"]];
 
-var minPairsGenerated = 5, pairsInUse = [], connection = [], connections = 0;
+var minPairsGenerated = 5, pairsInUse = [], connection = [], connections = [], lineNodes = [];
 
 document.addEventListener( "DOMContentLoaded", init);
 
@@ -18,12 +18,89 @@ function init() {
 
 	document.getElementById("pair-list").addEventListener("click", function(e) {
         if (e.target && e.target.nodeName === "LI") {
-            makeConnection();
+            makeConnection(e.target);
+            // console.log(e.target.dataset.key);
         }
     })
 }
+function makeVisualConnection() {
+	var rect1 = lineNodes[0].getBoundingClientRect();
+	var rect2 = lineNodes[1].getBoundingClientRect();
 
-function makeConnection() {
+	var outerRect = document.getElementById("pair-list").getBoundingClientRect();
+
+	var height1 = rect1.bottom - rect1.top;
+	var height2 = rect2.bottom - rect2.top;
+
+	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
+	var lineEnd = {x: rect2.left, y: rect2.top + (height2/2)};
+
+	var Y = lineEnd.y - lineBeginning.y;
+	var X = lineEnd.x - lineBeginning.x;
+
+	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
+
+	var lineAngle = Math.asin(Y/lineWidth) * (180/Math.PI);
+
+	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3};
+
+	var line = document.createElement("span");
+
+	line.className = "line";
+	line.style.width = lineWidth + "px";
+	line.style.marginTop = linePosition.y + "px";
+	line.style.marginLeft = linePosition.x + "px";
+	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.transform 		= "rotate(" + lineAngle + "deg)";
+
+	document.getElementById("pair-list").appendChild(line);
+}
+function makeConnection(button) {
+	button.className = "connect";
+
+	if (button.dataset.key === undefined) {
+		connection[1] = button.innerHTML;
+		lineNodes[1] = button;
+	} else {
+		connection[0] = button.innerHTML;
+		lineNodes[0] = button;
+	}
+	if ((connection[0] !== undefined) && (connection[1] !== undefined)) {
+
+		for (i = 0; i < pairsInUse.length; i++) {
+			if (connection[0] === pairsInUse[i][0]) {
+				connections[i] = connection[1];
+				makeVisualConnection();
+			}
+		}
+
+
+		setTimeout(function(){
+			var lis = document.getElementsByClassName("connect");
+			lis[1].className = "";
+			lis[0].className = "";
+		}, 700);
+
+		connection = [];
+	}
+}
+
+
+
+function checkPairs() {
+	if (connections.length === pairsInUse.length) {
+		for (i = 0; i < pairsInUse.length; i++) {
+			if (pairsInUse[i][1] !== connections[i]) {
+				console.log('fuckyou on line ' + (i+1));
+			}
+		}
+		console.log('checked');
+	} else {
+		console.log("fill'em all, fucka'");
+	}
 
 }
 

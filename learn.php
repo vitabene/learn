@@ -13,22 +13,24 @@
     	let's now work with the assumption that I do have some pairs already defined and need to program the actual mechanism
     	-->
     	<div class="controls">
-    		<input type="text" name="pairKey" value="tyrion" autocomplete="off">
+    		<!-- <input type="text" name="pairKey" value="tyrion" autocomplete="off">
     		<input type="text" name="pairValue" value="lannister"  autocomplete="off">
-    		<button onclick="addPair()">save</button>
+    		<button onclick="addPair()">save</button> -->
 
     		<!-- <label for="num-of-pairs">enter number of pairs for practise</label> -->
     		<input type="number" name="num-of-pairs" value="6" placeholder="5">
     		<button onclick="generatePairs()">set</button>
+    		<button onclick="checkPairs()">check</button>
     	</div>
     	<div id="pair-list">
-    		<table id="pair-table"></table>
+    		<!-- <table id="pair-table"></table> -->
 
     		<ul class="leftcol">
     		</ul>
 
     		<ul  class="rightcol">
     		</ul>
+
     	</div>
 
     </main>

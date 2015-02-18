@@ -69,32 +69,60 @@ a {
 #learn main {
   width: 100%;
   margin: 0 auto;
-  margin-top: 200px;
   text-align: center; }
 #learn input, #learn button {
   border: none; }
 #learn #pair-list {
-  background: #9E2626;
+  position: relative;
   width: 40%;
   margin: 10px;
   margin-left: 30%;
   height: auto;
+  min-height: 300px;
   overflow: auto; }
   #learn #pair-list table {
     width: 100%;
     color: white;
     table-layout: fixed; }
   #learn #pair-list .leftcol, #learn #pair-list .rightcol {
+    position: absolute;
     float: left;
     width: 50%; }
-  #learn #pair-list li {
-    background: #D5A2A2;
-    margin: 10px 25px; }
+  #learn #pair-list .rightcol {
+    margin-left: 50%; }
+  #learn #pair-list button {
+    margin-top: 240px;
+    position: absolute; }
+#learn .line {
+  position: absolute;
+  background-color: #35A769;
+  height: 2px;
+  display: block;
+  border-radius: 1px; }
+#learn li {
+  background: #2d57a9;
+  color: #fffedb;
+  padding: 3px;
+  border-radius: 5px;
+  margin: 10px 25px;
+  font-size: medium;
+  cursor: pointer; }
 #learn .del-row-button {
   width: 100%; }
 #learn .num-of-pairs {
   color: white; }
   #learn .num-of-pairs input {
     text-align: right; }
+#learn .mistake {
+  background: #D92424;
+  color: white; }
+#learn .connect {
+  position: relative;
+  bottom: 3px;
+  background: #182e58;
+  color: white;
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75); }
 
 /*# sourceMappingURL=style.css.map */
