@@ -4,9 +4,9 @@
   box-shadow:         $x $y $blur $spread rgba(0,0,0,0.75);
 }
 @mixin rotate($deg) {
-    -ms-transform: rotate($deg);
-    -webkit-transform: rotate($deg);
-    transform: rotate($deg);
+  -ms-transform: rotate($deg);
+  -webkit-transform: rotate($deg);
+  transform: rotate($deg);
 }
 body, nav, ul, table {
   margin: 0;
@@ -14,23 +14,6 @@ body, nav, ul, table {
 }
 body {
   background: url('../assets/congpent.png');
-}
-nav {
-  background: #118877;
-  width: 100%;
-  position: fixed;
-  & ul li {
-    display: inline-block;
-    min-width: 4em;
-    font-size: 2em;
-    line-height: 1.5em;
-    background: #494949;
-    color: #f9f9f9;
-    padding: .3em 1em;
-    &:hover {
-      background: #216886;
-    }
-  }
 }
 ul {
   margin: auto;
@@ -64,98 +47,81 @@ a {
 .hidden {
   display: none;
 }
-#backbutton {
-  position: fixed;
-  background: #F15454;
-  width: 100px;
-  height: 50px;
-  line-height: 50px;
-  color: white;
-  text: {
-    decoration: none;
-    align: center;
-    shadow: 1px 1px 1px #000;
-  }
+main {
+width: 100%;
+margin: 0 auto;
+  // margin-top: 200px;
+  text-align: center;
 }
-#clock {
-  font: bold 24pt sans;
-  background: #E3D394;
-  padding: 10px;
-  border: dashed black 1px;
-  border-radius: 3px;
+input, button {
+  border: none;
 }
-#learn {
-  main {
+#pair-list {
+  position: relative;
+  width: 40%;
+  margin: 10px;
+  margin-left: 30%;
+  height: auto;
+  min-height: 300px;
+  overflow: auto;
+  & table {
     width: 100%;
-    margin: 0 auto;
-    // margin-top: 200px;
-    text-align: center;
+    color: white;
+    table-layout: fixed;
   }
-  input, button {
-    border: none;
-  }
-  #pair-list {
-    position: relative;
-    width: 40%;
-    margin: 10px;
-    margin-left: 30%;
-    height: auto;
-    min-height: 300px;
-    overflow: auto;
-    & table {
-      width: 100%;
-      color: white;
-      table-layout: fixed;
-    }
-    .leftcol, .rightcol {
-      position: absolute;
-      float: left;
-      width: 50%;
-    }
-    .rightcol {
-      margin-left: 50%;
-    }
-    button {
-      margin-top: 240px;
-      position: absolute;
-    }
-  }
-  .line {
+  .leftcol, .rightcol {
     position: absolute;
-    background-color: #35A769;
-    height: 2px;
-    display: block;
-    border-radius: 1px;
+    float: left;
+    width: 50%;
   }
-  li {
-    background: darken(#668CD6, 20%);
-    color: lighten(#FFFC75, 20%);
-    padding: 3px;
-    border-radius: 5px;
-    margin: 10px 25px;
-    font-size: medium;
-    cursor: pointer;
+  .rightcol {
+    margin-left: 50%;
   }
-  .del-row-button {
-    width: 100%;
+  button {
+    margin-top: 240px;
+    position: absolute;
   }
-  .num-of-pairs {
-    color: white;
-    & input {
-      text-align: right;
-    }
+}
+.line {
+  position: absolute;
+  background-color: #35A769;
+  height: 2px;
+  display: block;
+  border-radius: 1px;
+}
+li {
+  background: darken(#668CD6, 20%);
+  color: lighten(#FFFC75, 20%);
+  padding: 3px;
+  border-radius: 5px;
+  margin: 10px 25px;
+  font-size: medium;
+  cursor: pointer;
+  @include box-shadow(0.5, 0.5, 0.5, 0.5);
+}
+.del-row-button {
+  width: 100%;
+}
+.num-of-pairs {
+  color: white;
+  & input {
+    text-align: right;
   }
-  .controls {
-  }
-  .mistake {
-    background: #D92424;
-    color: white;
-  }
-  .connect {
-    position: relative;
-    bottom: 3px;
-    background: darken(#668CD6, 40%);
-    color: lighten(#FFFC75, 40%);
-    @include box-shadow(0px, 0px, 1px, 1px);
-  }
+}
+.controls {
+}
+.mistake {
+  background: #D92424;
+  color: white;
+}
+.correct {
+  background: #17BB1F;
+  color: white;
+}
+.connect {
+  position: relative;
+  bottom: 3px;
+  background: darken(#668CD6, 40%);
+  color: lighten(#FFFC75, 40%);
+  @include box-shadow(0px, 0px, 1px, 1px);
 }

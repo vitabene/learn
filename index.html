@@ -2,24 +2,21 @@
 <html>
 <head>
     <title>Learn</title>
-    <?php require 'includes/head.php'; ?>
+    <meta charset="UTF-8">
+<link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+<link rel="icon" href="favicon.png">
     <script src="js/learn.js"></script>
 </head>
 <body id="learn">
-    <?php if (isset($_SERVER["HTTP_REFERER"])) echo "<a href='" . $_SERVER["HTTP_REFERER"] . "' id='backbutton'>back</a>" ?>
     <main>
-    	<!--
-    	okay punk, that's adding a pair, not that it works anyway
-    	let's now work with the assumption that I do have some pairs already defined and need to program the actual mechanism
-    	-->
     	<div class="controls">
     		<!-- <input type="text" name="pairKey" value="tyrion" autocomplete="off">
     		<input type="text" name="pairValue" value="lannister"  autocomplete="off">
     		<button onclick="addPair()">save</button> -->
 
     		<!-- <label for="num-of-pairs">enter number of pairs for practise</label> -->
-    		<input type="number" name="num-of-pairs" value="6" placeholder="5">
-    		<button onclick="generatePairs()">set</button>
+    		<input type="number" name="num-of-pairs" value="4" placeholder="5">
+    		<button onclick="generatePairs()">generate</button>
     		<button onclick="checkPairs()">check</button>
     	</div>
     	<div id="pair-list">

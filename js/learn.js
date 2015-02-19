@@ -1,6 +1,6 @@
 var pairDatabase = [["Lorem", "Ipsum"], ["Dog", "Woof"], ["Cat", "Miau"], ["Bacon", "Fat"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"]];
 
-var minPairsGenerated = 5, pairsInUse = [], connection = [], connections = [], lineNodes = [];
+var minPairsGenerated = 5, pairsInUse = [], connection = [], lineNodes = [];
 
 document.addEventListener( "DOMContentLoaded", init);
 
@@ -26,30 +26,28 @@ function init() {
 function makeVisualConnection() {
 	var rect1 = lineNodes[0].getBoundingClientRect();
 	var rect2 = lineNodes[1].getBoundingClientRect();
-
 	var outerRect = document.getElementById("pair-list").getBoundingClientRect();
-
 	var height1 = rect1.bottom - rect1.top;
 	var height2 = rect2.bottom - rect2.top;
-
 	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
-	var lineEnd = {x: rect2.left, y: rect2.top + (height2/2)};
-
+	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
 	var Y = lineEnd.y - lineBeginning.y;
 	var X = lineEnd.x - lineBeginning.x;
-
 	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
-
-	var lineAngle = Math.asin(Y/lineWidth) * (180/Math.PI);
-
-	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3};
-
+	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
+	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
 	var line = document.createElement("span");
 
 	line.className = "line";
-	line.style.width = lineWidth + "px";
-	line.style.marginTop = linePosition.y + "px";
-	line.style.marginLeft = linePosition.x + "px";
+
+	line.dataset.a = lineNodes[0].innerHTML;
+	line.dataset.b = lineNodes[1].innerHTML;
+	line.dataset.keyindex = lineNodes[0].dataset.keyindex;
+	line.dataset.valueindex = lineNodes[1].dataset.valueindex;
+
+	line.style.width = round(lineWidth, 1) + "px";
+	line.style.marginTop = round(linePosition.y, 1) + "px";
+	line.style.marginLeft = round(linePosition.x, 1) + "px";
 	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
 	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
 	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
@@ -58,10 +56,23 @@ function makeVisualConnection() {
 
 	document.getElementById("pair-list").appendChild(line);
 }
-function makeConnection(button) {
-	button.className = "connect";
 
-	if (button.dataset.key === undefined) {
+function makeConnection(button) {
+	if (button.className.indexOf("connect") === -1 || button.className.indexOf("mistake") !== -1) button.className = "connect";
+	else button.className = "";
+	var lines = document.getElementsByClassName("line");
+
+	if (lines.length > 0) {
+		for (i = 0; i < lines.length; i++) {
+			if (lines[i].dataset.keyindex === button.dataset.keyindex) {
+				lines[i].parentNode.removeChild(lines[i]);
+			} else if (lines[i].dataset.valueindex === button.dataset.valueindex) {
+				lines[i].parentNode.removeChild(lines[i]);
+			}
+		}
+	}
+
+	if (button.dataset.keyindex === undefined) {
 		connection[1] = button.innerHTML;
 		lineNodes[1] = button;
 	} else {
@@ -70,38 +81,52 @@ function makeConnection(button) {
 	}
 	if ((connection[0] !== undefined) && (connection[1] !== undefined)) {
 
-		for (i = 0; i < pairsInUse.length; i++) {
-			if (connection[0] === pairsInUse[i][0]) {
-				connections[i] = connection[1];
-				makeVisualConnection();
-			}
-		}
+		makeVisualConnection();
 
-
-		setTimeout(function(){
-			var lis = document.getElementsByClassName("connect");
-			lis[1].className = "";
-			lis[0].className = "";
-		}, 700);
+		setTimeout(function() {clearClass("connect")}, 300);
 
 		connection = [];
 	}
 }
 
-
+function clearClass(clearClassName) {
+	var lis = document.getElementsByClassName(clearClassName);
+	if (lis.length === 0) return;
+	lis[1].className = lis[1].className.replace(clearClassName, "");
+	lis[0].className = lis[0].className.replace(clearClassName, "");
+}
 
 function checkPairs() {
-	if (connections.length === pairsInUse.length) {
+	var lines = document.getElementsByClassName("line");
+	var keys = getLiChildrenOfClassName("leftcol");
+	var values = getLiChildrenOfClassName("rightcol");
+
+	if (lines.length === pairsInUse.length) {
 		for (i = 0; i < pairsInUse.length; i++) {
-			if (pairsInUse[i][1] !== connections[i]) {
-				console.log('fuckyou on line ' + (i+1));
+			for (j = 0; j < lines.length; j++) {
+				if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] === lines[j].dataset.b) {
+					keys[lines[j].dataset.keyindex].className = "correct";
+					values[lines[j].dataset.valueindex].className = "correct";
+				} else if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] !== lines[j].dataset.b) {
+					keys[lines[j].dataset.keyindex].className = "mistake";
+					values[lines[j].dataset.valueindex].className = "mistake";
+				}
 			}
 		}
-		console.log('checked');
+		if (document.getElementsByClassName("mistake").length === 0) {
+			console.log("rejoice and be merry");
+		}
 	} else {
 		console.log("fill'em all, fucka'");
 	}
 
+}
+
+function getLiChildrenOfClassName(ulClassName) {
+	var nodeList = document.getElementsByClassName(ulClassName)[0].childNodes, array = [];
+	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
+	array.shift();
+	return array;
 }
 
 function generatePairs() {
@@ -122,18 +147,16 @@ function generatePairs() {
 
 	shuffleArray(values);
 
-	var leftcol = document.getElementsByClassName("leftcol")[0];
-	var rightcol = document.getElementsByClassName("rightcol")[0];
-
 	for (i = 0; i < numberOfPairs; i++) {
 		var key = document.createElement("li");
 		key.innerHTML = pairsInUse[i][0];
-		key.setAttribute("data-key", i);
-		leftcol.appendChild(key);
+		key.setAttribute("data-keyIndex", i);
+		document.getElementsByClassName("leftcol")[0].appendChild(key);
 
 		var value = document.createElement("li");
 		value.innerHTML = values[i];
-		rightcol.appendChild(value);
+		value.setAttribute("data-valueIndex", i);
+		document.getElementsByClassName("rightcol")[0].appendChild(value);
 	}
 }
 
@@ -142,16 +165,9 @@ function shuffleArray(a)	{
 	return a;
 }
 
-
-
-
-
-
-
-
-
-
-
+function round(number, numberOfDigits) {
+	return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));
+}
 /*
 	TRIED IT ANYWAY
 	function Pair(key, values) {
