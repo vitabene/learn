@@ -3,7 +3,8 @@ body, nav, ul, table {
   padding: 0; }
 
 body {
-  background: url("../assets/congpent.png"); }
+  background: url("../assets/dark.png");
+  font-family: 'Titillium Web', sans-serif; }
 
 ul {
   margin: auto;
@@ -53,15 +54,17 @@ input, button {
     width: 100%;
     color: white;
     table-layout: fixed; }
-  #pair-list .leftcol, #pair-list .rightcol {
-    position: absolute;
-    float: left;
-    width: 50%; }
-  #pair-list .rightcol {
-    margin-left: 50%; }
   #pair-list button {
     margin-top: 240px;
     position: absolute; }
+
+#leftcol, #rightcol {
+  position: absolute;
+  float: left;
+  width: 50%; }
+
+#rightcol {
+  margin-left: 50%; }
 
 .line {
   position: absolute;
@@ -69,6 +72,23 @@ input, button {
   height: 2px;
   display: block;
   border-radius: 1px; }
+
+#message {
+  position: static;
+  margin: 5px auto;
+  border: 1px #EEEEEE dashed;
+  border-radius: 5px;
+  padding: 15px;
+  background: #e2d1d1;
+  color: #161616;
+  font-size: large;
+  text-shadow: 0.5px 0.5px 15px #666666; }
+
+#remove-message {
+  float: right;
+  cursor: pointer;
+  font-size: large;
+  margin: 5px; }
 
 li {
   background: #2d57a9;
@@ -101,8 +121,8 @@ li {
 .connect {
   position: relative;
   bottom: 3px;
-  background: #182e58;
-  color: white;
+  background: #b6c8ec;
+  color: black;
   -webkit-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.75); }

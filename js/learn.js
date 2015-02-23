@@ -1,8 +1,8 @@
-var pairDatabase = [["Lorem", "Ipsum"], ["Dog", "Woof"], ["Cat", "Miau"], ["Bacon", "Fat"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"]];
+var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Harry", "Potter"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 
-var minPairsGenerated = 5, pairsInUse = [], connection = [], lineNodes = [];
+var minPairsGenerated = 5, pairsInUse = [], indexesUsed = [], connection = [], lineNodes = [], diff;
 
-document.addEventListener( "DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", init);
 
 function init() {
 	/*document.onkeydown = function (evt) {
@@ -16,17 +16,31 @@ function init() {
 	    return "Sure you want to leave?";
 	}*/
 
-	document.getElementById("pair-list").addEventListener("click", function(e) {
+	byId("pair-list").addEventListener("click", function(e) {
         if (e.target && e.target.nodeName === "LI") {
             makeConnection(e.target);
             // console.log(e.target.dataset.key);
         }
     })
 }
+
+function refresh() {
+	var parent = byId("pair-list");
+	while (parent.firstChild) {
+		parent.removeChild(parent.firstChild);
+	}
+	leftcol = document.createElement("ul");
+	rightcol = document.createElement("ul");
+	leftcol.id = "leftcol";
+	rightcol.id = "rightcol";
+	parent.appendChild(leftcol);
+	parent.appendChild(rightcol);
+}
+
 function makeVisualConnection() {
 	var rect1 = lineNodes[0].getBoundingClientRect();
 	var rect2 = lineNodes[1].getBoundingClientRect();
-	var outerRect = document.getElementById("pair-list").getBoundingClientRect();
+	var outerRect = byId("pair-list").getBoundingClientRect();
 	var height1 = rect1.bottom - rect1.top;
 	var height2 = rect2.bottom - rect2.top;
 	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
@@ -54,13 +68,13 @@ function makeVisualConnection() {
 	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
 	line.style.transform 		= "rotate(" + lineAngle + "deg)";
 
-	document.getElementById("pair-list").appendChild(line);
+	byId("pair-list").appendChild(line);
 }
 
 function makeConnection(button) {
 	if (button.className.indexOf("connect") === -1 || button.className.indexOf("mistake") !== -1) button.className = "connect";
 	else button.className = "";
-	var lines = document.getElementsByClassName("line");
+	var lines = byClassName("line");
 
 	if (lines.length > 0) {
 		for (i = 0; i < lines.length; i++) {
@@ -90,16 +104,16 @@ function makeConnection(button) {
 }
 
 function clearClass(clearClassName) {
-	var lis = document.getElementsByClassName(clearClassName);
+	var lis = byClassName(clearClassName);
 	if (lis.length === 0) return;
 	lis[1].className = lis[1].className.replace(clearClassName, "");
 	lis[0].className = lis[0].className.replace(clearClassName, "");
 }
 
 function checkPairs() {
-	var lines = document.getElementsByClassName("line");
-	var keys = getLiChildrenOfClassName("leftcol");
-	var values = getLiChildrenOfClassName("rightcol");
+	var lines = byClassName("line");
+	var keys = getChildrenOfId("leftcol");
+	var values = getChildrenOfId("rightcol");
 
 	if (lines.length === pairsInUse.length) {
 		for (i = 0; i < pairsInUse.length; i++) {
@@ -113,35 +127,68 @@ function checkPairs() {
 				}
 			}
 		}
-		if (document.getElementsByClassName("mistake").length === 0) {
-			console.log("rejoice and be merry");
+
+		if (byClassName("mistake").length === 0) {
+			setTimeout(generatePairs, 700);
 		}
+
 	} else {
 		console.log("fill'em all, fucka'");
 	}
 
 }
 
-function getLiChildrenOfClassName(ulClassName) {
-	var nodeList = document.getElementsByClassName(ulClassName)[0].childNodes, array = [];
-	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
-	array.shift();
-	return array;
+function displayScore() {
+	console.log('score');
+}
+
+function message(messageText) {
+	var message = document.createElement('div');
+	message.id = 'message';
+	var text = document.createElement('span');
+	text.innerHTML = messageText;
+	var removeButton = document.createElement('span');
+	removeButton.id = 'remove-message';
+	removeButton.innerHTML = 'X';
+	var parent = byTag('main')[0];
+	parent.insertBefore(message, parent.childNodes[0]);
+	byId('message').appendChild(text);
+	byId('message').appendChild(removeButton);
+
+	byId('remove-message').addEventListener("click", function() {
+		byId('remove-message').parentNode.parentNode.removeChild(byId('remove-message').parentNode);
+	});
+
+	return true;
 }
 
 function generatePairs() {
-	var numberOfPairs = +document.getElementsByTagName("input")[name="num-of-pairs"].value;
+	refresh();
 
-	var pairsChosen = [];
+	var numberOfPairs = +byTag("input")[name="num-of-pairs"].value, pairsChosen = [], values = [];
+
+	pairsInUse = [];
+
+	if (diff === -1) displayScore();
+	diff = pairDatabase.length - indexesUsed.length;
+
+	if (diff < numberOfPairs) {
+		numberOfPairs = diff;
+		diff = -1;
+		return;
+	}
 
 	while (numberOfPairs !== (pairsChosen.length)) {
 		var randomNumber = Math.floor((Math.random() * pairDatabase.length));
-		if (pairsChosen.indexOf(randomNumber) === -1) pairsChosen.push(randomNumber);
+		if (pairsChosen.indexOf(randomNumber) === -1 && indexesUsed.indexOf(randomNumber) === -1) {
+			pairsChosen.push(randomNumber);
+		}
 	}
 
-	for (i = 0; i < pairsChosen.length; i++) pairsInUse.push(pairDatabase[pairsChosen[i]]);
-
-	var values = [];
+	for (i = 0; i < pairsChosen.length; i++) {
+		pairsInUse.push(pairDatabase[pairsChosen[i]]);
+		indexesUsed.push(pairsChosen[i]);
+	}
 
 	for (i = 0; i < pairsInUse.length; i++)	values[i] = pairsInUse[i][1];
 
@@ -151,12 +198,12 @@ function generatePairs() {
 		var key = document.createElement("li");
 		key.innerHTML = pairsInUse[i][0];
 		key.setAttribute("data-keyIndex", i);
-		document.getElementsByClassName("leftcol")[0].appendChild(key);
+		byId("leftcol").appendChild(key);
 
 		var value = document.createElement("li");
 		value.innerHTML = values[i];
 		value.setAttribute("data-valueIndex", i);
-		document.getElementsByClassName("rightcol")[0].appendChild(value);
+		byId("rightcol").appendChild(value);
 	}
 }
 
@@ -165,8 +212,22 @@ function shuffleArray(a)	{
 	return a;
 }
 
+function getChildrenOfId(id) {
+	var nodeList = byId(id).childNodes, array = [];
+	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
+	return array;
+}
 function round(number, numberOfDigits) {
 	return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));
+}
+function byTag(tag) {
+	return document.getElementsByTagName(tag);
+}
+function byClassName(className) {
+	return document.getElementsByClassName(className);
+}
+function byId(id) {
+	return document.getElementById(id);
 }
 /*
 	TRIED IT ANYWAY
