@@ -1,6 +1,8 @@
-var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Harry", "Potter"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
+var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 
-var minPairsGenerated = 5, pairsInUse = [], indexesUsed = [], connection = [], lineNodes = [], diff;
+// var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
+
+var minPairsGenerated = 8, pairsInUse = [], indexesUsed = [], connection = [], lineNodes = [], mistakes = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -19,7 +21,6 @@ function init() {
 	byId("pair-list").addEventListener("click", function(e) {
         if (e.target && e.target.nodeName === "LI") {
             makeConnection(e.target);
-            // console.log(e.target.dataset.key);
         }
     })
 }
@@ -38,11 +39,8 @@ function refresh() {
 }
 
 function makeVisualConnection() {
-	var rect1 = lineNodes[0].getBoundingClientRect();
-	var rect2 = lineNodes[1].getBoundingClientRect();
-	var outerRect = byId("pair-list").getBoundingClientRect();
-	var height1 = rect1.bottom - rect1.top;
-	var height2 = rect2.bottom - rect2.top;
+	var rect1 = lineNodes[0].getBoundingClientRect(), rect2 = lineNodes[1].getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
+	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
 	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
 	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
 	var Y = lineEnd.y - lineBeginning.y;
@@ -72,6 +70,13 @@ function makeVisualConnection() {
 }
 
 function makeConnection(button) {
+
+	if (!!button.dataset.keyindex && !!lineNodes[0]) {
+		lineNodes[0].className = "";
+	} else if (!!button.dataset.valueindex && !!lineNodes[1]) {
+		lineNodes[1].className = "";
+	}
+
 	if (button.className.indexOf("connect") === -1 || button.className.indexOf("mistake") !== -1) button.className = "connect";
 	else button.className = "";
 	var lines = byClassName("line");
@@ -86,21 +91,25 @@ function makeConnection(button) {
 		}
 	}
 
-	if (button.dataset.keyindex === undefined) {
+	if (!button.dataset.keyindex) {
 		connection[1] = button.innerHTML;
 		lineNodes[1] = button;
 	} else {
 		connection[0] = button.innerHTML;
 		lineNodes[0] = button;
 	}
-	if ((connection[0] !== undefined) && (connection[1] !== undefined)) {
 
+	if (!!connection[0] && !!connection[1]) {
 		makeVisualConnection();
 
 		setTimeout(function() {clearClass("connect")}, 300);
 
 		connection = [];
 	}
+
+	var lines = byClassName("line");
+	if (lines.length !== pairsInUse.length) byId("checkbutton").disabled = true;
+	else byId("checkbutton").disabled = false;
 }
 
 function clearClass(clearClassName) {
@@ -124,22 +133,24 @@ function checkPairs() {
 				} else if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] !== lines[j].dataset.b) {
 					keys[lines[j].dataset.keyindex].className = "mistake";
 					values[lines[j].dataset.valueindex].className = "mistake";
+					mistakes++;
 				}
 			}
 		}
 
 		if (byClassName("mistake").length === 0) {
-			setTimeout(generatePairs, 700);
+			setTimeout(generatePairs, 1000);
 		}
 
 	} else {
-		console.log("fill'em all, fucka'");
+		message("Please connect all bubbles.");
 	}
 
 }
 
 function displayScore() {
-	console.log('score');
+	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
+	message(scoreMessage);
 }
 
 function message(messageText) {
@@ -165,17 +176,25 @@ function message(messageText) {
 function generatePairs() {
 	refresh();
 
-	var numberOfPairs = +byTag("input")[name="num-of-pairs"].value, pairsChosen = [], values = [];
+	byId("startbutton").disabled = true;
+	byId("checkbutton").disabled = true;
+
+	// var numberOfPairs = +byTag("input")[name="num-of-pairs"].value, pairsChosen = [], values = [];
+	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [];
 
 	pairsInUse = [];
 
-	if (diff === -1) displayScore();
-	diff = pairDatabase.length - indexesUsed.length;
+	var diff = pairDatabase.length - indexesUsed.length;
 
 	if (diff < numberOfPairs) {
 		numberOfPairs = diff;
-		diff = -1;
-		return;
+	}
+	if (!diff) {
+		displayScore();
+		message("You can fin more at http://gkolin.cz/index.php?p=28");
+		byId("startbutton").disabled = false;
+		byId("startbutton").innerHTML = "start over";
+		indexesUsed = [];
 	}
 
 	while (numberOfPairs !== (pairsChosen.length)) {

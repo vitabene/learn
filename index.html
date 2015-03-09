@@ -3,10 +3,10 @@
 <head>
     <title>Learn</title>
     <meta charset="UTF-8">
-<link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
-<link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
-<link rel="icon" href="favicon.png">
-    <script src="js/learn.js"></script>
+    <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="favicon.png">
+    <script src="./js/learn.js"></script>
 </head>
 <body id="learn">
     <main>
@@ -17,22 +17,21 @@
     		<button onclick="addPair()">save</button> -->
 
     		<!-- <label for="num-of-pairs">enter number of pairs for practise</label> -->
-    		<input type="number" name="num-of-pairs" value="4" placeholder="5">
-    		<button onclick="generatePairs()">generate</button>
-    		<button onclick="checkPairs()">check</button>
-    	</div>
+    		<!-- <input type="number" name="num-of-pairs" value="15" placeholder="5"> -->
+            <button onclick="showTextBox()" id="uploadbutton">upload</button>
+            <button onclick="generatePairs()" id="startbutton">start</button>
+            <button onclick="checkPairs()" id="checkbutton">check</button>
+        </div>
 
-    	<div id="pair-list">
+        <div id="pair-list">
+            <ul id="leftcol">
+            </ul>
 
-    		<!-- <table id="pair-table"></table> -->
+            <ul  id="rightcol">
+            </ul>
 
-    		<ul id="leftcol">
-    		</ul>
-
-    		<ul  id="rightcol">
-    		</ul>
-
-    	</div>
+            <!-- <table id="pair-table"></table> -->
+        </div>
 
     </main>
 </body>
