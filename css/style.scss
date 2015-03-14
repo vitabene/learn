@@ -8,7 +8,7 @@
   -webkit-transform: rotate($deg);
   transform: rotate($deg);
 }
-body, nav, ul, table {
+body, nav, ul, table, div, section {
   margin: 0;
   padding: 0;
 }
@@ -72,6 +72,8 @@ input, button {
   }
   button {
     margin-top: 240px;
+    border: 0px;
+    padding: 5px;
     position: absolute;
   }
 }
@@ -85,7 +87,7 @@ input, button {
 }
 .line {
   position: absolute;
-  background-color: #35A769;
+  background-color: white;
   height: 2px;
   display: block;
   border-radius: 1px;
@@ -126,6 +128,7 @@ li {
   }
 }
 #controls {
+  background: gray;
 }
 .mistake {
   background: #D92424;
