@@ -2,9 +2,12 @@ body, nav, ul, table {
   margin: 0;
   padding: 0; }
 
+@font-face {
+  font-family: 'customFont';
+  src: url(http://fonts.googleapis.com/css?family=Raleway); }
 body {
   background: url("../assets/stardust.png");
-  font-family: 'Titillium Web', sans-serif; }
+  font-family: 'customFont','Titillium Web', sans-serif; }
 
 ul {
   margin: auto;
@@ -25,9 +28,6 @@ a {
   text-decoration: none;
   color: #fff; }
 
-@font-face {
-  font-family: 'customFont';
-  src: url(http://fonts.googleapis.com/css?family=Raleway); }
 .revealed {
   display: block; }
 
@@ -76,13 +76,12 @@ input, button {
 #message {
   position: static;
   margin: 5px auto;
-  border: 1px #EEEEEE dashed;
-  border-radius: 5px;
+  border: 1px #BB7D00 dashed;
   padding: 15px;
   background: #e2d1d1;
   color: #161616;
   font-size: large;
-  text-shadow: 0.5px 0.5px 15px #666666; }
+  text-shadow: 0.5px 0.5px 5px #666666; }
 
 #remove-message {
   float: right;
