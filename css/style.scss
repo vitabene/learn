@@ -104,12 +104,11 @@ nav {
 #message {
   position: static;
   margin: 5px auto;
-  border: 1px #BB7D00 dashed;
   padding: 15px;
-  background: lighten(#6F4545, 50%);
-  color: #161616;
+  background: lighten(#A4D9C0, 20%);
+  color: #000;
   font-size: large;
-  text-shadow: 0.5px 0.5px 5px lighten(#000, 40%);
+  @include box-shadow(0px, 0px, 1px, 1px);
 }
 #remove-message {
   float: right;
@@ -117,18 +116,21 @@ nav {
   font-size: large;
   margin: 5px;
 }
-.mistake {
-  background: #D92424;
-  color: white;
-}
-.correct {
-  background: #17BB1F;
-  color: white;
-}
 .connect {
   position: relative;
   bottom: 3px;
-  background: lighten(#668CD6, 20%);
+  background: lighten(#668CD6, 20%) !important;
   color: darken(#FFFC75, 90%);
   @include box-shadow(0px, 0px, 1px, 1px);
+}
+.mistake {
+  background: #D92424 !important;
+  color: white;
+}
+.correct {
+  background: #17BB1F !important;
+  color: white;
+}
+.wrong {
+  display: none;
 }

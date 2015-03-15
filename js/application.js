@@ -1,8 +1,9 @@
-var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
+/*var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];*/
 
+var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"]];
 // var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
 
-var minPairsGenerated = 8, pairsInUse = [], indexesUsed = [], connection = [], lineNodes = [], mistakes = 0;
+var minPairsGenerated = 8, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -18,15 +19,17 @@ function init() {
 	    return "Sure you want to leave?";
 	}*/
 
+	generatePairs();
+
 	byId("pair-list").addEventListener("click", function(e) {
-        if (e.target && e.target.nodeName === "LI") {
-            makeConnection(e.target);
-        }
-    })
+		if (e.target && e.target.nodeName === "LI") {
+			makeConnection(e.target);
+		}
+	});
 }
 
 function refresh() {
-	var parent = byId("pair-list");
+	var parent = byId("pair-list"), controls = byClassName("controls")[0];
 	while (parent.firstChild) {
 		parent.removeChild(parent.firstChild);
 	}
@@ -36,10 +39,13 @@ function refresh() {
 	rightcol.id = "rightcol";
 	parent.appendChild(leftcol);
 	parent.appendChild(rightcol);
+
+	//hardcoded value
+	controls.style.marginTop = 300 + "px"
 }
 
-function makeVisualConnection() {
-	var rect1 = lineNodes[0].getBoundingClientRect(), rect2 = lineNodes[1].getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
+function makeVisualConnection(nodeOne, nodeTwo) {
+	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
 	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
 	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
 	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
@@ -50,12 +56,13 @@ function makeVisualConnection() {
 	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
 	var line = document.createElement("span");
 
-	line.className = "line";
+	if (nodeOne.className === "correct") line.className = "line correct";
+	else line.className = "line";
 
-	line.dataset.a = lineNodes[0].innerHTML;
-	line.dataset.b = lineNodes[1].innerHTML;
-	line.dataset.keyindex = lineNodes[0].dataset.keyindex;
-	line.dataset.valueindex = lineNodes[1].dataset.valueindex;
+	line.dataset.a = nodeOne.innerHTML;
+	line.dataset.b = nodeTwo.innerHTML;
+	line.dataset.keyindex = nodeOne.dataset.keyindex;
+	line.dataset.valueindex = nodeTwo.dataset.valueindex;
 
 	line.style.width = round(lineWidth, 1) + "px";
 	line.style.marginTop = round(linePosition.y, 1) + "px";
@@ -70,15 +77,17 @@ function makeVisualConnection() {
 }
 
 function makeConnection(button) {
-
+	//checking if a button in the same column was not clicked already
 	if (!!button.dataset.keyindex && !!lineNodes[0]) {
 		lineNodes[0].className = "";
 	} else if (!!button.dataset.valueindex && !!lineNodes[1]) {
 		lineNodes[1].className = "";
 	}
 
+	//
 	if (button.className.indexOf("connect") === -1 || button.className.indexOf("mistake") !== -1) button.className = "connect";
 	else button.className = "";
+
 	var lines = byClassName("line");
 
 	if (lines.length > 0) {
@@ -92,54 +101,71 @@ function makeConnection(button) {
 	}
 
 	if (!button.dataset.keyindex) {
-		connection[1] = button.innerHTML;
 		lineNodes[1] = button;
 	} else {
-		connection[0] = button.innerHTML;
 		lineNodes[0] = button;
 	}
 
-	if (!!connection[0] && !!connection[1]) {
-		makeVisualConnection();
-
+	if (!!lineNodes[0] && !!lineNodes[1]) {
+		makeVisualConnection(lineNodes[0], lineNodes[1]);
 		setTimeout(function() {clearClass("connect")}, 300);
-
-		connection = [];
+		lineNodes = [];
 	}
 
+	//if all buttons are connected
 	var lines = byClassName("line");
 	if (lines.length !== pairsInUse.length) byId("checkbutton").disabled = true;
 	else byId("checkbutton").disabled = false;
 }
-
-function clearClass(clearClassName) {
-	var lis = byClassName(clearClassName);
-	if (lis.length === 0) return;
-	lis[1].className = lis[1].className.replace(clearClassName, "");
-	lis[0].className = lis[0].className.replace(clearClassName, "");
-}
-
 function checkPairs() {
-	var lines = byClassName("line");
-	var keys = getChildrenOfId("leftcol");
-	var values = getChildrenOfId("rightcol");
+	var lines = byClassName("line"), keys = getChildrenOfId("leftcol"), keyParent = byId("leftcol");
+	var values = getChildrenOfId("rightcol"), valueParent = byId("rightcol");
 
 	if (lines.length === pairsInUse.length) {
 		for (i = 0; i < pairsInUse.length; i++) {
 			for (j = 0; j < lines.length; j++) {
-				if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] === lines[j].dataset.b) {
-					keys[lines[j].dataset.keyindex].className = "correct";
-					values[lines[j].dataset.valueindex].className = "correct";
-				} else if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] !== lines[j].dataset.b) {
-					keys[lines[j].dataset.keyindex].className = "mistake";
-					values[lines[j].dataset.valueindex].className = "mistake";
-					mistakes++;
+						var keyNode = keys[lines[j].dataset.keyindex];
+						var valueNode = values[lines[j].dataset.valueindex];
+				if (keyNode !== "correct" && valueNode !== "correct") {
+					if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] === lines[j].dataset.b) {
+						keyNode.className = "correct";
+						keyParent.removeChild(keyNode);
+						keyParent.insertBefore(keyNode, keyParent.childNodes[0]);
+
+						valueNode.className = "correct";
+						valueParent.removeChild(valueNode);
+						valueParent.insertBefore(valueNode, valueParent.childNodes[0]);
+
+					} else if (pairsInUse[i][0] === lines[j].dataset.a && pairsInUse[i][1] !== lines[j].dataset.b) {
+						keyNode.className = "mistake";
+						valueNode.className = "mistake";
+
+						lines[j].className = "wrong";
+						mistakes++;
+					}
 				}
 			}
 		}
 
+		removeTagWithClass("wrong");
+		removeTagWithClass("line");
+
+		var newKeys = getChildrenOfId("leftcol");
+		var newValues = getChildrenOfId("rightcol");
+
+		for (var i = 0; i < newKeys.length; i++) {
+			if (newKeys[i].className.indexOf("correct") !== -1) {
+				makeVisualConnection(newKeys[i], newValues[i]);
+			}
+		};
+
 		if (byClassName("mistake").length === 0) {
 			setTimeout(generatePairs, 1000);
+		} else {
+			setTimeout(function() {
+				clearClass("mistake");
+			}, 1000);
+
 		}
 
 	} else {
@@ -153,46 +179,23 @@ function displayScore() {
 	message(scoreMessage);
 }
 
-function message(messageText) {
-	var message = document.createElement('div');
-	message.id = 'message';
-	var text = document.createElement('span');
-	text.innerHTML = messageText;
-	var removeButton = document.createElement('span');
-	removeButton.id = 'remove-message';
-	removeButton.innerHTML = 'X';
-	var parent = byTag('main')[0];
-	parent.insertBefore(message, parent.childNodes[0]);
-	byId('message').appendChild(text);
-	byId('message').appendChild(removeButton);
-
-	byId('remove-message').addEventListener("click", function() {
-		byId('remove-message').parentNode.parentNode.removeChild(byId('remove-message').parentNode);
-	});
-
-	return true;
-}
-
 function generatePairs() {
 	refresh();
 
-	byId("startbutton").disabled = true;
+	byId("startbutton").style.display = "none";
 	byId("checkbutton").disabled = true;
 
 	// var numberOfPairs = +byTag("input")[name="num-of-pairs"].value, pairsChosen = [], values = [];
-	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [];
+	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length;
 
 	pairsInUse = [];
-
-	var diff = pairDatabase.length - indexesUsed.length;
 
 	if (diff < numberOfPairs) {
 		numberOfPairs = diff;
 	}
 	if (!diff) {
 		displayScore();
-		message("You can fin more at http://gkolin.cz/index.php?p=28");
-		byId("startbutton").disabled = false;
+		byId("startbutton").style.display = "inline-block";
 		byId("startbutton").innerHTML = "start over";
 		indexesUsed = [];
 	}
@@ -211,7 +214,7 @@ function generatePairs() {
 
 	for (i = 0; i < pairsInUse.length; i++)	values[i] = pairsInUse[i][1];
 
-	shuffleArray(values);
+		shuffleArray(values);
 
 	for (i = 0; i < numberOfPairs; i++) {
 		var key = document.createElement("li");
@@ -226,28 +229,6 @@ function generatePairs() {
 	}
 }
 
-function shuffleArray(a)	{
-	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
-	return a;
-}
-
-function getChildrenOfId(id) {
-	var nodeList = byId(id).childNodes, array = [];
-	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
-	return array;
-}
-function round(number, numberOfDigits) {
-	return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));
-}
-function byTag(tag) {
-	return document.getElementsByTagName(tag);
-}
-function byClassName(className) {
-	return document.getElementsByClassName(className);
-}
-function byId(id) {
-	return document.getElementById(id);
-}
 /*
 	TRIED IT ANYWAY
 	function Pair(key, values) {

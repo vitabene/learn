@@ -9,8 +9,8 @@ module.exports = function(grunt) {
 				banner: '/* Vitezslav Benes 2015*/\n'
 			},
 			target: {
-				src: 'js/application.js',
-				dest: 'js/application.min.js'
+				src: 'js/build/application.js',
+				dest: 'js/build/application.min.js'
 			}
 		},
 		jshint: {
@@ -21,15 +21,15 @@ module.exports = function(grunt) {
 				src: 'js/application.js'
 			}
 		},
-		/*concat: {
+		concat: {
 			options: {
 				separator: ';'
 			},
 			target: {
-				src: ['js/application.js'],
-				dest: 'dist/application.js'
+				src: ['js/application.js', 'js/helpers.js'],
+				dest: 'js/build/application.js'
 			}
-		},*/
+		},
 		imagemin: {
 			dynamic: {
 				files: [{
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 			},
 			scripts: {
 				files: ['js/*.js'],
-				tasks: ['jshint'],
+				tasks: ['default'],
 				options: {
 					spawn: false,
 				}
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		clean: ["assets/build/*"],
+		clean: ['assets/build/', 'js/build/'],
 		sass: {
 			dist: {
 				options: {
@@ -75,5 +75,5 @@ module.exports = function(grunt) {
 
 	require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('default', ['clean', 'sass', 'uglify', 'imagemin']);
+	grunt.registerTask('default', ['clean', 'sass', 'concat', 'uglify']);
 }
