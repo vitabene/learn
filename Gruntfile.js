@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 				jshintrc: '.jshintrc'
 			},
 			target: {
-				src: 'js/*.js'
+				src: 'js/application.js'
 			}
 		},
 		/*concat: {

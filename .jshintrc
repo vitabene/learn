@@ -1,6 +1,9 @@
 {
 	"eqeqeq": true,
-	/*"curly": true,*/
+	"curly": true,
 	"undef": true,
-	"unused": true
+	// "unused": true,
+	"globals": {
+	"$": false
+	}
 }

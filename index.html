@@ -3,35 +3,28 @@
 <head>
     <title>Learn</title>
     <meta charset="UTF-8">
+
     <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+
     <script src="./js/application.min.js"></script>
 </head>
 <body id="learn">
-    <main>
-
-    	<div id="controls">
-    		<!-- <input type="text" name="pairKey" value="tyrion" autocomplete="off">
-    		<input type="text" name="pairValue" value="lannister"  autocomplete="off">
-    		<button onclick="addPair()">save</button> -->
-
-    		<!-- <label for="num-of-pairs">enter number of pairs for practise</label> -->
-    		<!-- <input type="number" name="num-of-pairs" value="15" placeholder="5"> -->
-            <button onclick="showTextBox()" id="uploadbutton">upload</button>
+    <nav>
+        <ul>
+            <a href="index.html"><li>Learn</li></a>
+            <a href="upload.html"><li>upload</li></a>
+        </ul>
+    </nav>
+    <main class="content">
+        <div id="pair-list">
+            <ul id="leftcol"></ul>
+            <ul id="rightcol"></ul>
+        </div>
+        <div class="controls">
             <button onclick="generatePairs()" id="startbutton">start</button>
             <button onclick="checkPairs()" id="checkbutton">check</button>
         </div>
-
-        <div id="pair-list">
-            <ul id="leftcol">
-            </ul>
-
-            <ul  id="rightcol">
-            </ul>
-
-            <!-- <table id="pair-table"></table> -->
-        </div>
-
     </main>
 </body>
 </html>
