@@ -36,8 +36,8 @@ nav {
   & ul {
     width: 80%;
     margin-left: 10%;
+    font-size: 1.1em;
     & li {
-      font-size: large;
       line-height: 40px;
       display: inline-block;
       padding: 0 40px;
@@ -45,6 +45,9 @@ nav {
     &:first-child a {
       color: #070015;
       text-shadow: .5px .5px .5px lighten(#fff, 0%);
+    }
+    & .logo {
+      font-size: x-large;
     }
   }
 }
@@ -60,6 +63,7 @@ nav {
 .controls {
   text-align: center;
   position: relative;
+  margin-top: 300px;
   & button {
     border: 0;
     background-color: #E2E2E2;
@@ -97,6 +101,13 @@ nav {
 .line {
   position: absolute;
   background-color: white;
+  height: 2px;
+  display: block;
+  border-radius: 1px;
+}
+.line-correct {
+  position: absolute;
+  background-color: #17BB1F;
   height: 2px;
   display: block;
   border-radius: 1px;
