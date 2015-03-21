@@ -79,10 +79,6 @@ function isKey(button) {
 	if (button.id.substring(0, 1) === "k") return true;
 	return false;
 }
-function isValue(button) {
-	if (button.id.substring(0, 1) === "v") return true;
-	return false;
-}
 function findKey(array, string) {
 	for (var i = 0; i < array.length; i++) {
 		if (array[string]) return array[string];

@@ -13,7 +13,7 @@
     <nav>
         <ul>
             <a href="index.php" class="logo"><li>Learn</li></a>
-            <a href="upload.php"><li>upload</li></a>
+            <!-- <a href="upload.php"><li>upload</li></a> -->
         </ul>
     </nav>
     <main class="content">

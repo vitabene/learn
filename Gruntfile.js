@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				separator: ';'
 			},
 			target: {
-				src: ['js/application.js', 'js/helpers.js'],
+				src: ['js/init.js', 'js/classes.js', 'js/helpers.js', 'js/gui.js', 'js/application.js'],
 				dest: 'js/build/application.js'
 			}
 		},
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 			},
 			scripts: {
 				files: ['js/*.js'],
-				tasks: ['default'],
+				tasks: ['concat', 'default'],
 				options: {
 					spawn: false,
 				}

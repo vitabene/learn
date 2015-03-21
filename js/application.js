@@ -1,97 +1,32 @@
-/*var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];*/
-
-var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"]];
-// var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
-
-var minPairsGenerated = 8, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
-
-document.addEventListener("DOMContentLoaded", init);
-
-function init() {
-	/*document.onkeydown = function (evt) {
-		var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
-		if (keyCode == 13) {
-			enterKeyAction();
-		}
-	}*/
-
-	/*window.onbeforeunload = function(e) {
-	    return "Sure you want to leave?";
-	}*/
-
-	generatePairs();
-
-	byId("pair-list").addEventListener("click", function(e) {
-		if (e.target && e.target.nodeName === "LI") {
-			makeConnection(e.target);
-		}
-	});
-}
-function makeVisualConnection(nodeOne, nodeTwo) {
-	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
-	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
-	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
-	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
-	var Y = lineEnd.y - lineBeginning.y;
-	var X = lineEnd.x - lineBeginning.x;
-	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
-	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
-	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
-	var line = document.createElement("span");
-
-	if (nodeOne.className === "correct") line.className = "line-correct";
-	else {
-		line.className = "line";
-		line.dataset.a = nodeOne.innerHTML;
-		line.dataset.b = nodeTwo.innerHTML;
-		line.dataset.keyindex = nodeOne.dataset.keyindex;
-		line.dataset.valueindex = nodeTwo.dataset.valueindex;
-	}
-	line.style.width = round(lineWidth, 1) + "px";
-	line.style.marginTop = round(linePosition.y, 1) + "px";
-	line.style.marginLeft = round(linePosition.x, 1) + "px";
-	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.transform 		= "rotate(" + lineAngle + "deg)";
-
-	byId("pair-list").appendChild(line);
-}
-
 function makeConnection(button) {
 	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes[0]) {
-		lineNodes[0].className = "";
-	} else if (isValue(button) && !!lineNodes[1]) {
-		lineNodes[1].className = "";
+	if (isKey(button) && !!lineNodes["key"]) {
+		lineNodes["key"].className = "";
+	} else if (!isKey(button) && !!lineNodes["value"]) {
+		lineNodes["value"].className = "";
 	}
 
-	if (button.className !== "connect" ) button.className = "connect";
+	//highlighting selected node
+	if (button.className !== "selected") button.className = "selected";
 	else button.className = "";
 
-	var lines = byClassName("line");
-
-	if (lines.length > 0) {
-		for (i = 0; i < lines.length; i++) {
-			if (lines[i].dataset.keyindex === button.dataset.keyindex) {
-				lines[i].parentNode.removeChild(lines[i]);
-			} else if (lines[i].dataset.valueindex === button.dataset.valueindex) {
-				lines[i].parentNode.removeChild(lines[i]);
-			}
-		}
+	//removing line immediately with id l + id of value or key
+	if (!!button.id) {
+		var lookupLineId = "l" + button.id.substring(button.id.length - 1);
+		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
 	}
 
-	if (!button.dataset.keyindex) {
-		lineNodes[1] = button;
+	if (isKey(button)) {
+		lineNodes["key"] = button;
 	} else {
-		lineNodes[0] = button;
+		lineNodes["value"] = button;
 	}
 
-	//both node defined
-	if (!!lineNodes[0] && !!lineNodes[1]) {
-		makeVisualConnection(lineNodes[0], lineNodes[1]);
-		setTimeout(function() {clearClass("connect")}, 300);
+	//both nodes defined
+	if (!!lineNodes["key"] && !!lineNodes["value"]) {
+		var pair = pairsInUse[lineNodes["key"].id];
+		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+		setTimeout(function() {clearClass("selected")}, 300);
 		lineNodes = [];
 	}
 
@@ -100,19 +35,20 @@ function makeConnection(button) {
 	if (lines.length !== (pairsInUse.length - correct)) byId("checkbutton").disabled = true;
 	else byId("checkbutton").disabled = false;
 }
-function checkPairs() {
+
+/*function checkPairs() {
 	if (true) {
 
 		removeTagWithClass("line");
 
-		/*var newKeys = getChildrenOfId("leftcol");
+		var newKeys = getChildrenOfId("leftcol");
 		var newValues = getChildrenOfId("rightcol");
 
 		for (var i = 0; i < newKeys.length; i++) {
 			if (newKeys[i].className === "correct") {
 				makeVisualConnection(newKeys[i], newValues[i]);
 			}
-		};*/
+		};
 
 		//if mistake
 		if (mistakes === 0) {
@@ -130,15 +66,10 @@ function checkPairs() {
 		message("Please connect all bubbles.");
 	}
 
-}
-
-function displayScore() {
-	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
-	message(scoreMessage);
-}
+}*/
 
 function generatePairs() {
-	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton");
+	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
 
 	startButton.style.display = "none";
 	checkButton.disabled = true;
@@ -171,30 +102,12 @@ function generatePairs() {
 	for (i = 0; i < numberOfPairs; i++) {
 		var key = pairsInUse[i].keyNode, value = values[i];
 		key.id = "k" + i;
-		value.id = "v" + i;
+		associativePairArray[key.id] = pairsInUse[i];
 		byId("leftcol").appendChild(key);
 		byId("rightcol").appendChild(value);
 	}
+	pairsInUse = associativePairArray;
 }
-
-function Pair(keyData, valueData) {
-
-	this.createLiNode = function(nodeData) {
-		var liNode = document.createElement('li');
-		liNode.innerHTML = nodeData;
-		return liNode;
-	}
-
-	this.keyNode = this.createLiNode(keyData);
-	this.valueNode = this.createLiNode(valueData);
-
-	this.assignedNode;
-}
-
-function Connection(liElement) {
-
-}
-
 
 /*function addPair() {
 	var inputs = document.getElementsByTagName("input");

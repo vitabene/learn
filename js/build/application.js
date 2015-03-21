@@ -26,215 +26,33 @@ function init() {
 			makeConnection(e.target);
 		}
 	});
-}
-function makeVisualConnection(nodeOne, nodeTwo) {
-	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
-	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
-	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
-	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
-	var Y = lineEnd.y - lineBeginning.y;
-	var X = lineEnd.x - lineBeginning.x;
-	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
-	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
-	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
-	var line = document.createElement("span");
-
-	if (nodeOne.className === "correct") line.className = "line-correct";
-	else {
-		line.className = "line";
-		line.dataset.a = nodeOne.innerHTML;
-		line.dataset.b = nodeTwo.innerHTML;
-		line.dataset.keyindex = nodeOne.dataset.keyindex;
-		line.dataset.valueindex = nodeTwo.dataset.valueindex;
-	}
-	line.style.width = round(lineWidth, 1) + "px";
-	line.style.marginTop = round(linePosition.y, 1) + "px";
-	line.style.marginLeft = round(linePosition.x, 1) + "px";
-	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.transform 		= "rotate(" + lineAngle + "deg)";
-
-	byId("pair-list").appendChild(line);
-}
-
-function makeConnection(button) {
-	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes[0]) {
-		lineNodes[0].className = "";
-	} else if (isValue(button) && !!lineNodes[1]) {
-		lineNodes[1].className = "";
-	}
-
-	if (button.className !== "connect" ) button.className = "connect";
-	else button.className = "";
-
-	var lines = byClassName("line");
-
-	if (lines.length > 0) {
-		for (i = 0; i < lines.length; i++) {
-			if (lines[i].dataset.keyindex === button.dataset.keyindex) {
-				lines[i].parentNode.removeChild(lines[i]);
-			} else if (lines[i].dataset.valueindex === button.dataset.valueindex) {
-				lines[i].parentNode.removeChild(lines[i]);
-			}
-		}
-	}
-
-	if (!button.dataset.keyindex) {
-		lineNodes[1] = button;
-	} else {
-		lineNodes[0] = button;
-	}
-
-	//both node defined
-	if (!!lineNodes[0] && !!lineNodes[1]) {
-		makeVisualConnection(lineNodes[0], lineNodes[1]);
-		setTimeout(function() {clearClass("connect")}, 300);
-		lineNodes = [];
-	}
-
-	//if all buttons are connected enable check button
-	var lines = byClassName("line"), correct = byClassName("line-correct").length;
-	if (lines.length !== (pairsInUse.length - correct)) byId("checkbutton").disabled = true;
-	else byId("checkbutton").disabled = false;
-}
-function checkPairs() {
-	if (true) {
-
-		removeTagWithClass("line");
-
-		/*var newKeys = getChildrenOfId("leftcol");
-		var newValues = getChildrenOfId("rightcol");
-
-		for (var i = 0; i < newKeys.length; i++) {
-			if (newKeys[i].className === "correct") {
-				makeVisualConnection(newKeys[i], newValues[i]);
-			}
-		};*/
-
-		//if mistake
-		if (mistakes === 0) {
-			setTimeout(function() {
-				generatePairs();
-				removeAllChildren("pair-list");
-			}, 1000);
-		} else {
-			setTimeout(function() {
-				clearClass("mistake");
-			}, 1000);
-
-		}
-	} else {
-		message("Please connect all bubbles.");
-	}
-
-}
-
-function displayScore() {
-	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
-	message(scoreMessage);
-}
-
-function generatePairs() {
-	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton");
-
-	startButton.style.display = "none";
-	checkButton.disabled = true;
-
-	pairsInUse = [];
-
-	if (diff < numberOfPairs) {
-		numberOfPairs = diff;
-	}
-	if (!diff) {
-		//gui stuff
-		displayScore();
-		startButton.style.display = "inline-block";
-		startButton.innerHTML = "start over";
-
-		indexesUsed = [];
-	}
-
-	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase);
-	pairsInUse = pairArrayFromIndexes(indexesFromDB, pairDatabase);
-
-	indexesUsed.concat(indexesFromDB);
-
-	for (var i = 0; i < pairsInUse.length; i++) {
-		values.push(pairsInUse[i].valueNode);
-	}
-
-	shuffleArray(values);
-
-	for (i = 0; i < numberOfPairs; i++) {
-		var key = pairsInUse[i].keyNode, value = values[i];
-		key.id = "k" + i;
-		value.id = "v" + i;
-		byId("leftcol").appendChild(key);
-		byId("rightcol").appendChild(value);
-	}
-}
-
-function Pair(keyData, valueData) {
+};function Pair(keyData, valueData) {
 
 	this.createLiNode = function(nodeData) {
 		var liNode = document.createElement('li');
 		liNode.innerHTML = nodeData;
 		return liNode;
 	}
-
+	this.setValue = function(valueToAssign){
+		this.assignedValue = valueToAssign;
+	}
+	this.check = function() {
+		if (this.valueNode.innerHTML === this.assignedValue) markCorrect();
+		else highlightMistake();
+	}
+	this.drawLine = function(parent, newLine) {
+		this.line = newLine;
+		parent.appendChild(this.line);
+	}
 	this.keyNode = this.createLiNode(keyData);
 	this.valueNode = this.createLiNode(valueData);
-
-	this.assignedNode;
+	this.assignedValue;
+	this.line;
 }
 
 function Connection(liElement) {
 
-}
-
-
-/*function addPair() {
-	var inputs = document.getElementsByTagName("input");
-
-	// var pair = new Pair(inputs[0].value, inputs[1].value);
-	// pair.save();
-
-	var pair = [];
-	pair[inputs[0].value] = inputs[1].value;
-	pairArray[pairArray.length] = pair;
-
-	console.log(pair);
-	addRow(pair);
-}
-
-function showPairs() {
-	for (i = 0; i < pairArray.length; i++) {
-		console.log(pairArray[i].toString());
-	}
-}
-
-function deleteRow(button) {
-	var row=button.parentNode.parentNode;
-	row.parentNode.removeChild(row);
-}
-
-function addRow(pair) {
-	var table = document.getElementById("pair-table");
-	var row = table.insertRow(0);
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-	var cell3 = row.insertCell(2);
-
-	for(var index in pair) {
-	cell1.innerHTML = index;
-	cell2.innerHTML = pair.index;
-	cell3.innerHTML = "<button class='del-row-button' onclick='deleteRow(this)'>delete</button>"
-	}
-}*/
-;function shuffleArray(a)	{
+};function shuffleArray(a)	{
 	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
 		return a;
 }
@@ -315,10 +133,6 @@ function isKey(button) {
 	if (button.id.substring(0, 1) === "k") return true;
 	return false;
 }
-function isValue(button) {
-	if (button.id.substring(0, 1) === "v") return true;
-	return false;
-}
 function findKey(array, string) {
 	for (var i = 0; i < array.length; i++) {
 		if (array[string]) return array[string];
@@ -342,4 +156,192 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 	}
 
 	return pairsArray;
+};function makeVisualConnection(nodeOne, nodeTwo) {
+	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
+	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
+	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
+	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
+	var Y = lineEnd.y - lineBeginning.y;
+	var X = lineEnd.x - lineBeginning.x;
+	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
+	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
+	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
+	var line = document.createElement("span");
+
+	// if (nodeOne.className === "correct") line.className = "line-correct";
+
+	line.className = "line";
+	var keyId = nodeOne.id;
+	line.id = "l" + keyId.substring(keyId.length - 1);
+
+	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
+
+	line.dataset.a = nodeOne.innerHTML;
+	line.dataset.b = nodeTwo.innerHTML;
+	line.dataset.keyindex = nodeOne.id;
+	// line.dataset.valueindex = nodeTwo.dataset.valueindex;
+
+	line.style.width = round(lineWidth, 1) + "px";
+	line.style.marginTop = round(linePosition.y, 1) + "px";
+	line.style.marginLeft = round(linePosition.x, 1) + "px";
+	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.transform 		= "rotate(" + lineAngle + "deg)";
+
+	return line;
 }
+
+function displayScore() {
+	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
+	message(scoreMessage);
+};function makeConnection(button) {
+	//checking if a button in the same column was not clicked already
+	if (isKey(button) && !!lineNodes["key"]) {
+		lineNodes["key"].className = "";
+	} else if (!isKey(button) && !!lineNodes["value"]) {
+		lineNodes["value"].className = "";
+	}
+
+	//highlighting selected node
+	if (button.className !== "selected") button.className = "selected";
+	else button.className = "";
+
+	//removing line immediately with id l + id of value or key
+	if (!!button.id) {
+		var lookupLineId = "l" + button.id.substring(button.id.length - 1);
+		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
+	}
+
+	if (isKey(button)) {
+		lineNodes["key"] = button;
+	} else {
+		lineNodes["value"] = button;
+	}
+
+	//both nodes defined
+	if (!!lineNodes["key"] && !!lineNodes["value"]) {
+		var pair = pairsInUse[lineNodes["key"].id];
+		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+		setTimeout(function() {clearClass("selected")}, 300);
+		lineNodes = [];
+	}
+
+	//if all buttons are connected enable check button
+	var lines = byClassName("line"), correct = byClassName("line-correct").length;
+	if (lines.length !== (pairsInUse.length - correct)) byId("checkbutton").disabled = true;
+	else byId("checkbutton").disabled = false;
+}
+
+/*function checkPairs() {
+	if (true) {
+
+		removeTagWithClass("line");
+
+		var newKeys = getChildrenOfId("leftcol");
+		var newValues = getChildrenOfId("rightcol");
+
+		for (var i = 0; i < newKeys.length; i++) {
+			if (newKeys[i].className === "correct") {
+				makeVisualConnection(newKeys[i], newValues[i]);
+			}
+		};
+
+		//if mistake
+		if (mistakes === 0) {
+			setTimeout(function() {
+				generatePairs();
+				removeAllChildren("pair-list");
+			}, 1000);
+		} else {
+			setTimeout(function() {
+				clearClass("mistake");
+			}, 1000);
+
+		}
+	} else {
+		message("Please connect all bubbles.");
+	}
+
+}*/
+
+function generatePairs() {
+	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
+
+	startButton.style.display = "none";
+	checkButton.disabled = true;
+
+	pairsInUse = [];
+
+	if (diff < numberOfPairs) {
+		numberOfPairs = diff;
+	}
+	if (!diff) {
+		//gui stuff
+		displayScore();
+		startButton.style.display = "inline-block";
+		startButton.innerHTML = "start over";
+
+		indexesUsed = [];
+	}
+
+	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase);
+	pairsInUse = pairArrayFromIndexes(indexesFromDB, pairDatabase);
+
+	indexesUsed.concat(indexesFromDB);
+
+	for (var i = 0; i < pairsInUse.length; i++) {
+		values.push(pairsInUse[i].valueNode);
+	}
+
+	shuffleArray(values);
+
+	for (i = 0; i < numberOfPairs; i++) {
+		var key = pairsInUse[i].keyNode, value = values[i];
+		key.id = "k" + i;
+		associativePairArray[key.id] = pairsInUse[i];
+		byId("leftcol").appendChild(key);
+		byId("rightcol").appendChild(value);
+	}
+	pairsInUse = associativePairArray;
+}
+
+/*function addPair() {
+	var inputs = document.getElementsByTagName("input");
+
+	// var pair = new Pair(inputs[0].value, inputs[1].value);
+	// pair.save();
+
+	var pair = [];
+	pair[inputs[0].value] = inputs[1].value;
+	pairArray[pairArray.length] = pair;
+
+	console.log(pair);
+	addRow(pair);
+}
+
+function showPairs() {
+	for (i = 0; i < pairArray.length; i++) {
+		console.log(pairArray[i].toString());
+	}
+}
+
+function deleteRow(button) {
+	var row=button.parentNode.parentNode;
+	row.parentNode.removeChild(row);
+}
+
+function addRow(pair) {
+	var table = document.getElementById("pair-table");
+	var row = table.insertRow(0);
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+
+	for(var index in pair) {
+	cell1.innerHTML = index;
+	cell2.innerHTML = pair.index;
+	cell3.innerHTML = "<button class='del-row-button' onclick='deleteRow(this)'>delete</button>"
+	}
+}*/
