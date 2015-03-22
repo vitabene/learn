@@ -1,9 +1,9 @@
 /*var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];*/
 
-var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"]];
+var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 // var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
 
-var minPairsGenerated = 8, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
+var minPairsGenerated = 5, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -20,7 +20,6 @@ function init() {
 	}*/
 
 	generatePairs();
-
 	byId("pair-list").addEventListener("click", function(e) {
 		if (e.target && e.target.nodeName === "LI") {
 			makeConnection(e.target);
@@ -37,21 +36,26 @@ function init() {
 		this.assignedValue = valueToAssign;
 	}
 	this.check = function() {
-		if (this.valueNode.innerHTML === this.assignedValue) markCorrect();
-		else highlightMistake();
+		if (this.valueNode.innerHTML === this.assignedValue) this.markCorrect();
+		else this.highlightMistake();
 	}
 	this.drawLine = function(parent, newLine) {
 		this.line = newLine;
 		parent.appendChild(this.line);
 	}
+	this.markCorrect = function(){
+		this.keyNode.className = "correct";
+		this.valueNode.className = "correct";
+		this.line.className = "line-correct";
+	}
+	this.highlightMistake = function(){
+		this.keyNode.className = "mistake";
+		this.valueNode.className = "mistake";
+	}
 	this.keyNode = this.createLiNode(keyData);
 	this.valueNode = this.createLiNode(valueData);
 	this.assignedValue;
 	this.line;
-}
-
-function Connection(liElement) {
-
 };function shuffleArray(a)	{
 	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
 		return a;
@@ -176,11 +180,6 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 
 	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
 
-	line.dataset.a = nodeOne.innerHTML;
-	line.dataset.b = nodeTwo.innerHTML;
-	line.dataset.keyindex = nodeOne.id;
-	// line.dataset.valueindex = nodeTwo.dataset.valueindex;
-
 	line.style.width = round(lineWidth, 1) + "px";
 	line.style.marginTop = round(linePosition.y, 1) + "px";
 	line.style.marginLeft = round(linePosition.x, 1) + "px";
@@ -197,59 +196,62 @@ function displayScore() {
 	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
 	message(scoreMessage);
 };function makeConnection(button) {
-	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes["key"]) {
-		lineNodes["key"].className = "";
-	} else if (!isKey(button) && !!lineNodes["value"]) {
-		lineNodes["value"].className = "";
-	}
 
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
 	else button.className = "";
 
+	//checking if a button in the same column was not clicked already
+	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].className = "";
+	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].className = "";
+
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
-		var lookupLineId = "l" + button.id.substring(button.id.length - 1);
+		var number = button.id.substring(button.id.length - 1);
+		var lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
+		if (!!byId(lookupValueId)) byId(lookupValueId).id = "";
 	}
 
-	if (isKey(button)) {
-		lineNodes["key"] = button;
-	} else {
-		lineNodes["value"] = button;
-	}
+	//putting into lineNodes associative array
+	if (isKey(button)) lineNodes["key"] = button;
+	else lineNodes["value"] = button;
 
 	//both nodes defined
 	if (!!lineNodes["key"] && !!lineNodes["value"]) {
 		var pair = pairsInUse[lineNodes["key"].id];
+		pair.setValue(lineNodes["value"].innerHTML);
 		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+
 		setTimeout(function() {clearClass("selected")}, 300);
 		lineNodes = [];
 	}
 
 	//if all buttons are connected enable check button
-	var lines = byClassName("line"), correct = byClassName("line-correct").length;
+	/*var lines = byClassName("line"), correct = byClassName("line-correct").length;
 	if (lines.length !== (pairsInUse.length - correct)) byId("checkbutton").disabled = true;
-	else byId("checkbutton").disabled = false;
+	else byId("checkbutton").disabled = false;*/
 }
 
-/*function checkPairs() {
-	if (true) {
+function checkPairs() {
+	var lines = byClassName("line");
+	if (lines.length === minPairsGenerated) {
 
-		removeTagWithClass("line");
+		lineNodes = [];
+		//checking
+		for (var i = lines.length - 1; i >= 0; i--) {
+			pairsInUse["k" + i].check();
+			console.log(i);
+		}
 
-		var newKeys = getChildrenOfId("leftcol");
-		var newValues = getChildrenOfId("rightcol");
+		mistakes += byClassName("mistake").length;
 
-		for (var i = 0; i < newKeys.length; i++) {
-			if (newKeys[i].className === "correct") {
-				makeVisualConnection(newKeys[i], newValues[i]);
-			}
-		};
+
+		setTimeout(function() {clearClass("mistake")}, 500);
+
 
 		//if mistake
-		if (mistakes === 0) {
+		/*if (mistakes === 0) {
 			setTimeout(function() {
 				generatePairs();
 				removeAllChildren("pair-list");
@@ -258,20 +260,19 @@ function displayScore() {
 			setTimeout(function() {
 				clearClass("mistake");
 			}, 1000);
-
-		}
+		}*/
+		removeTagWithClass("line");
 	} else {
 		message("Please connect all bubbles.");
 	}
 
-}*/
+}
 
 function generatePairs() {
 	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
 
 	startButton.style.display = "none";
-	checkButton.disabled = true;
-
+	// checkButton.disabled = true;
 	pairsInUse = [];
 
 	if (diff < numberOfPairs) {

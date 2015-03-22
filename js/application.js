@@ -1,57 +1,60 @@
 function makeConnection(button) {
-	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes["key"]) {
-		lineNodes["key"].className = "";
-	} else if (!isKey(button) && !!lineNodes["value"]) {
-		lineNodes["value"].className = "";
-	}
 
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
 	else button.className = "";
 
+	//checking if a button in the same column was not clicked already
+	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].className = "";
+	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].className = "";
+
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
-		var lookupLineId = "l" + button.id.substring(button.id.length - 1);
+		var number = button.id.substring(button.id.length - 1);
+		var lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
+		if (!!byId(lookupValueId)) byId(lookupValueId).id = "";
 	}
 
-	if (isKey(button)) {
-		lineNodes["key"] = button;
-	} else {
-		lineNodes["value"] = button;
-	}
+	//putting into lineNodes associative array
+	if (isKey(button)) lineNodes["key"] = button;
+	else lineNodes["value"] = button;
 
 	//both nodes defined
 	if (!!lineNodes["key"] && !!lineNodes["value"]) {
 		var pair = pairsInUse[lineNodes["key"].id];
+		pair.setValue(lineNodes["value"].innerHTML);
 		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+
 		setTimeout(function() {clearClass("selected")}, 300);
 		lineNodes = [];
 	}
 
 	//if all buttons are connected enable check button
-	var lines = byClassName("line"), correct = byClassName("line-correct").length;
+	/*var lines = byClassName("line"), correct = byClassName("line-correct").length;
 	if (lines.length !== (pairsInUse.length - correct)) byId("checkbutton").disabled = true;
-	else byId("checkbutton").disabled = false;
+	else byId("checkbutton").disabled = false;*/
 }
 
-/*function checkPairs() {
-	if (true) {
+function checkPairs() {
+	var lines = byClassName("line");
+	if (lines.length === minPairsGenerated) {
 
-		removeTagWithClass("line");
+		lineNodes = [];
+		//checking
+		for (var i = lines.length - 1; i >= 0; i--) {
+			pairsInUse["k" + i].check();
+			console.log(i);
+		}
 
-		var newKeys = getChildrenOfId("leftcol");
-		var newValues = getChildrenOfId("rightcol");
+		mistakes += byClassName("mistake").length;
 
-		for (var i = 0; i < newKeys.length; i++) {
-			if (newKeys[i].className === "correct") {
-				makeVisualConnection(newKeys[i], newValues[i]);
-			}
-		};
+
+		setTimeout(function() {clearClass("mistake")}, 500);
+
 
 		//if mistake
-		if (mistakes === 0) {
+		/*if (mistakes === 0) {
 			setTimeout(function() {
 				generatePairs();
 				removeAllChildren("pair-list");
@@ -60,20 +63,19 @@ function makeConnection(button) {
 			setTimeout(function() {
 				clearClass("mistake");
 			}, 1000);
-
-		}
+		}*/
+		removeTagWithClass("line");
 	} else {
 		message("Please connect all bubbles.");
 	}
 
-}*/
+}
 
 function generatePairs() {
 	var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
 
 	startButton.style.display = "none";
-	checkButton.disabled = true;
-
+	// checkButton.disabled = true;
 	pairsInUse = [];
 
 	if (diff < numberOfPairs) {

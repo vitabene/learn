@@ -18,11 +18,6 @@ function makeVisualConnection(nodeOne, nodeTwo) {
 
 	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
 
-	line.dataset.a = nodeOne.innerHTML;
-	line.dataset.b = nodeTwo.innerHTML;
-	line.dataset.keyindex = nodeOne.id;
-	// line.dataset.valueindex = nodeTwo.dataset.valueindex;
-
 	line.style.width = round(lineWidth, 1) + "px";
 	line.style.marginTop = round(linePosition.y, 1) + "px";
 	line.style.marginLeft = round(linePosition.x, 1) + "px";
