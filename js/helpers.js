@@ -8,18 +8,10 @@ function getChildrenOfId(id) {
 	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
 		return array;
 }
-function round(number, numberOfDigits) {
-	return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));
-}
-function byTag(tag) {
-	return document.getElementsByTagName(tag);
-}
-function byClassName(className) {
-	return document.getElementsByClassName(className);
-}
-function byId(id) {
-	return document.getElementById(id);
-}
+function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
+function byTag(tag) { return document.getElementsByTagName(tag);}
+function byClassName(className) { return document.getElementsByClassName(className);}
+function byId(id) {	return document.getElementById(id);}
 function clearClass(clearClassName) {
 	var lis = byClassName(clearClassName);
 	if (lis.length === 0) return;
@@ -28,23 +20,23 @@ function clearClass(clearClassName) {
 	}
 }
 
-function message(messageText) {
-	var message = document.createElement('div');
+function message(messageText, parent) {
+	var message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
+
 	message.id = 'message';
-	var text = document.createElement('span');
 	text.innerHTML = messageText;
-	var removeButton = document.createElement('span');
+
 	removeButton.id = 'remove-message';
 	removeButton.innerHTML = 'X';
-	var parent = byTag('main')[0];
+
 	parent.insertBefore(message, parent.childNodes[0]);
 
-	byId('message').appendChild(text);
-	byId('message').appendChild(removeButton);
+	message.appendChild(text);
+	message.appendChild(removeButton);
 
-	byId('remove-message').addEventListener("click", function() {
-		byId('remove-message').parentNode.parentNode.removeChild(byId('remove-message').parentNode);
-	});
+	removeButton.addEventListener("click", function() {
+		parent.removeChild(this.parentNode);
+	})
 	return true;
 }
 function removeTagWithClass(className) {
@@ -64,12 +56,10 @@ function arrayFromCollection(collection) {
 	return array;
 }
 function removeAllChildren(id) {
-	var parent = byId(id);
+	var parent = byId(id), leftcol = document.createElement("ul"), rightcol = document.createElement("ul");
 	while (parent.firstChild) {
 		parent.removeChild(parent.firstChild);
 	}
-	leftcol = document.createElement("ul");
-	rightcol = document.createElement("ul");
 	leftcol.id = "leftcol";
 	rightcol.id = "rightcol";
 	parent.appendChild(leftcol);

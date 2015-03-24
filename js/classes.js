@@ -46,3 +46,14 @@ function Pair(keyData, valueData) {
 	this.assignedValue;
 	this.line;
 }
+
+function Line(keyNode, valueNode, parent) {
+	this.boundingRects = [keyNode.getBoundingClientRect(), valueNode.getBoundingClientRect(), parentNode.getBoundingClientRect()];
+	this.nodeHeight = boundingRects[0].bottom - boundingRects[0].top;
+	this.lineBeginning =  {x: boundingRects[0].right, y: boundingRects[0].top + (nodeHeight/2)};
+	this.lineEnd = { x: boundingRects[1].left, y: boundingRects[1].top + (nodeHeight/2)};
+	this.lineSpan = {x: this.lineEnd.x - this.lineBeginning.x, y: this.lineEnd.y - this.lineBeginning.y};
+	this.lineWidth = Math.sqrt(Math.pow(this.lineSpan.x, 2) + Math.pow(this.lineSpan.y, 2));
+	this.lineAngle = round(Math.asin(this.lineSpan.y/lineWidth) * (180/Math.PI), 1);
+
+}

@@ -1,4 +1,5 @@
 function makeVisualConnection(nodeOne, nodeTwo) {
+	//
 	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
 	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
 	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
