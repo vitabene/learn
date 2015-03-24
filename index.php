@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
-    <link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
     <script src="./js/build/application.min.js"></script>
 </head>
@@ -13,7 +14,7 @@
     <nav>
         <ul>
             <a href="index.php" class="logo"><li>learn</li></a>
-            <!-- <a href="upload.php"><li>upload</li></a> -->
+            <a href="upload.php"><li>upload</li></a>
         </ul>
     </nav>
     <main class="content">

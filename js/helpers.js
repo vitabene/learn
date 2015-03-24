@@ -25,7 +25,7 @@ function clearClass(clearClassName) {
 	if (lis.length === 0) return;
 	for (var i = lis.length - 1; i >= 0; i--) {
 		lis[i].className = lis[i].className.replace(clearClassName, "");
-	};
+	}
 }
 
 function message(messageText) {
@@ -85,11 +85,14 @@ function findKey(array, string) {
 	}
 	return false;
 }
-function randomIndexesFromDB(numberOfFields, databaseArray) {
+function randomIndexesFromDB(numberOfFields, databaseArray, indexesUsed) {
 	var indexesArray = [];
 	while (numberOfFields !== indexesArray.length) {
 		var randomNumber = Math.floor((Math.random() * databaseArray.length));
-		if (indexesArray.indexOf(randomNumber) === -1) indexesArray.push(randomNumber);
+		if (indexesArray.indexOf(randomNumber) === -1 && (indexesUsed.indexOf(randomNumber) === -1)) {
+			indexesArray.push(randomNumber);
+			indexesUsed.push(randomNumber);
+		}
 	}
 	return indexesArray;
 }
@@ -100,6 +103,5 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		var pair = new Pair(databaseArray[indexesArray[i]][0], databaseArray[indexesArray[i]][1]);
 		pairsArray.push(pair);
 	}
-
 	return pairsArray;
 }

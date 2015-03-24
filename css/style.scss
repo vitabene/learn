@@ -12,9 +12,13 @@ body, nav, ul, table, div {
   margin: 0;
   padding: 0;
 }
+@font-face {
+  font: 'code';
+  src: '../assets/codebold.otf';
+}
 body {
-  background: url('../assets/stardust.png');
-  font-family: 'Titillium Web', sans-serif;
+  background: url('../assets/restaurant.png');
+  font-family: 'Open Sans', sans-serif;
   position: absolute;
   width: 100%;
 }
@@ -30,12 +34,12 @@ nav {
   position: fixed;
   width: 100%;
   height: auto;
-  background: url('../assets/light.png') lighten(#FF4354, 15%);
+  background: url('../assets/dark.png') #222222;
   z-index: 1000;
   @include box-shadow(0px, 1px, 10px, .2px);
   & ul {
-    width: 80%;
-    margin-left: 10%;
+    width: 50%;
+    margin-left: 25%;
     font-size: 1.1em;
     & li {
       line-height: 40px;
@@ -43,8 +47,11 @@ nav {
       padding: 0 40px;
     }
     &:first-child a {
-      color: #070015;
-      text-shadow: .5px .5px .5px lighten(#fff, 0%);
+      color: #DEFFFE;  //#070015;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font-family:'code';
+      text-shadow: .3px .3px .3px #fff;
     }
     & .logo {
       font-size: x-large;
@@ -62,18 +69,31 @@ nav {
 }
 .controls {
   text-align: center;
-  position: relative;
-  margin-top: 300px;
+  position: static;
+  margin-top: 250px;
   & button {
     border: 0;
     background-color: #E2E2E2;
-    font-family: 'Titillium Web';
     font-size: large;
-    padding: 0 15px;
+    height: 30px;
+    width: 70px;
+    line-height: 30px;
+    letter-spacing: .5px;
+    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
   }
+}
+input[type='submit'] {
+  border: 0;
+    background-color: #E2E2E2;
+    height: 20px;
+    min-width: 70px;
+    line-height: 20px;
+    letter-spacing: .5px;
+    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
 }
 #pair-list {
   overflow: auto;
+  margin-top: 100px;
   & li {
     background: white;
     padding: 3px;
@@ -81,7 +101,8 @@ nav {
     width: 50%;
     font-size: medium;
     cursor: pointer;
-    @include box-shadow(0.5, 0.5, 0.5, 0.5);
+    letter-spacing: .1px;
+    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
   }
 }
 #leftcol, #rightcol {
@@ -100,10 +121,12 @@ nav {
 }
 .line {
   position: absolute;
-  background-color: white;
+  background-color: #FFF0B8;
   height: 2px;
   display: block;
   border-radius: 1px;
+  z-index: -1;
+  @include box-shadow(0.2px, 0.2px, 0.2px, 0.2px);
 }
 .line-correct {
   position: absolute;
@@ -113,9 +136,13 @@ nav {
   border-radius: 1px;
 }
 #message {
-  position: static;
-  margin: 5px auto;
-  padding: 15px;
+  position: absolute;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: -50px;
+  padding: 5px;
+  height: 35px;
+  line-height: 35px;
   background: lighten(#A4D9C0, 20%);
   color: #000;
   font-size: large;
@@ -125,7 +152,8 @@ nav {
   float: right;
   cursor: pointer;
   font-size: large;
-  margin: 5px;
+  line-height: 35px;
+  margin-right: 10px;
 }
 .selected {
   position: relative;

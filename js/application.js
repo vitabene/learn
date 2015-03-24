@@ -2,18 +2,18 @@ function makeConnection(button) {
 
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
-	else button.className = "";
+	else button.removeAttribute("class");
 
 	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].className = "";
-	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].className = "";
+	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].removeAttribute("class");
+	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].removeAttribute("class");
 
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
 		var number = button.id.substring(button.id.length - 1);
 		var lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
-		if (!!byId(lookupValueId)) byId(lookupValueId).id = "";
+		if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
 	}
 
 	//putting into lineNodes associative array
@@ -38,32 +38,36 @@ function makeConnection(button) {
 
 function checkPairs() {
 	var lines = byClassName("line");
-	if (lines.length === minPairsGenerated) {
+	if ((lines.length + correct) >= minPairsGenerated) {
 
 		lineNodes = [];
+		var currentMistakes = mistakes;
+
 		//checking
-		for (var i = lines.length - 1; i >= 0; i--) {
-			pairsInUse["k" + i].check();
-			console.log(i);
+		for (var i = lines.length + (correct % 4) - 1; i >= 0; i--) {
+			if (pairsInUse["k" + i].keyNode.className !== "correct") {
+				if (pairsInUse["k" + i].check()) correct++;
+				else mistakes++;
+			}
 		}
 
-		mistakes += byClassName("mistake").length;
+		//removing ids and classes to enable further checks
+		var valueParent = byId("rightcol");
+		for (var i = 0; i < valueParent.childNodes.length; i++) {
+			valueParent.childNodes[i].removeAttribute("id");
+		}
 
-
-		setTimeout(function() {clearClass("mistake")}, 500);
-
-
-		//if mistake
-		/*if (mistakes === 0) {
+		if (currentMistakes === mistakes) {
 			setTimeout(function() {
-				generatePairs();
 				removeAllChildren("pair-list");
+				generatePairs();
 			}, 1000);
 		} else {
 			setTimeout(function() {
 				clearClass("mistake");
 			}, 1000);
-		}*/
+		}
+
 		removeTagWithClass("line");
 	} else {
 		message("Please connect all bubbles.");
@@ -90,7 +94,7 @@ function generatePairs() {
 		indexesUsed = [];
 	}
 
-	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase);
+	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase, indexesUsed);
 	pairsInUse = pairArrayFromIndexes(indexesFromDB, pairDatabase);
 
 	indexesUsed.concat(indexesFromDB);
@@ -109,6 +113,15 @@ function generatePairs() {
 		byId("rightcol").appendChild(value);
 	}
 	pairsInUse = associativePairArray;
+
+	/*checkbutton positioning changing
+	bad, bad code!!!!!
+	fuck it, laters buttony
+	var checkButtonMarginTop = byId("leftcol").lastChild.getBoundingClientRect().bottom - 40; // magic
+	var checkButtonMarginLeft = byId("leftcol").getBoundingClientRect().right - 178; //magic
+	checkbutton.style.marginTop = checkButtonMarginTop + "px";
+	checkbutton.style.marginLeft = checkButtonMarginLeft + "px";*/
+
 }
 
 /*function addPair() {

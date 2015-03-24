@@ -3,7 +3,7 @@
 var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 // var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
 
-var minPairsGenerated = 5, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
+var minPairsGenerated = 4, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0, correct = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 

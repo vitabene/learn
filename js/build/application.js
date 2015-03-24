@@ -3,7 +3,7 @@
 var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 // var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];
 
-var minPairsGenerated = 5, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0;
+var minPairsGenerated = 4, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0, correct = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -25,37 +25,41 @@ function init() {
 			makeConnection(e.target);
 		}
 	});
-};function Pair(keyData, valueData) {
+};function makeVisualConnection(nodeOne, nodeTwo) {
+	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
+	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
+	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
+	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
+	var Y = lineEnd.y - lineBeginning.y;
+	var X = lineEnd.x - lineBeginning.x;
+	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
+	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
+	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
+	var line = document.createElement("span");
 
-	this.createLiNode = function(nodeData) {
-		var liNode = document.createElement('li');
-		liNode.innerHTML = nodeData;
-		return liNode;
-	}
-	this.setValue = function(valueToAssign){
-		this.assignedValue = valueToAssign;
-	}
-	this.check = function() {
-		if (this.valueNode.innerHTML === this.assignedValue) this.markCorrect();
-		else this.highlightMistake();
-	}
-	this.drawLine = function(parent, newLine) {
-		this.line = newLine;
-		parent.appendChild(this.line);
-	}
-	this.markCorrect = function(){
-		this.keyNode.className = "correct";
-		this.valueNode.className = "correct";
-		this.line.className = "line-correct";
-	}
-	this.highlightMistake = function(){
-		this.keyNode.className = "mistake";
-		this.valueNode.className = "mistake";
-	}
-	this.keyNode = this.createLiNode(keyData);
-	this.valueNode = this.createLiNode(valueData);
-	this.assignedValue;
-	this.line;
+	// if (nodeOne.className === "correct") line.className = "line-correct";
+
+	line.className = "line";
+	var keyId = nodeOne.id;
+	line.id = "l" + keyId.substring(keyId.length - 1);
+
+	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
+
+	line.style.width = round(lineWidth, 1) + "px";
+	line.style.marginTop = round(linePosition.y, 1) + "px";
+	line.style.marginLeft = round(linePosition.x, 1) + "px";
+	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
+	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
+	line.style.transform 		= "rotate(" + lineAngle + "deg)";
+
+	return line;
+}
+
+function displayScore() {
+	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
+	message(scoreMessage);
 };function shuffleArray(a)	{
 	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
 		return a;
@@ -83,7 +87,7 @@ function clearClass(clearClassName) {
 	if (lis.length === 0) return;
 	for (var i = lis.length - 1; i >= 0; i--) {
 		lis[i].className = lis[i].className.replace(clearClassName, "");
-	};
+	}
 }
 
 function message(messageText) {
@@ -143,11 +147,14 @@ function findKey(array, string) {
 	}
 	return false;
 }
-function randomIndexesFromDB(numberOfFields, databaseArray) {
+function randomIndexesFromDB(numberOfFields, databaseArray, indexesUsed) {
 	var indexesArray = [];
 	while (numberOfFields !== indexesArray.length) {
 		var randomNumber = Math.floor((Math.random() * databaseArray.length));
-		if (indexesArray.indexOf(randomNumber) === -1) indexesArray.push(randomNumber);
+		if (indexesArray.indexOf(randomNumber) === -1 && (indexesUsed.indexOf(randomNumber) === -1)) {
+			indexesArray.push(randomNumber);
+			indexesUsed.push(randomNumber);
+		}
 	}
 	return indexesArray;
 }
@@ -158,59 +165,70 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		var pair = new Pair(databaseArray[indexesArray[i]][0], databaseArray[indexesArray[i]][1]);
 		pairsArray.push(pair);
 	}
-
 	return pairsArray;
-};function makeVisualConnection(nodeOne, nodeTwo) {
-	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
-	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
-	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
-	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
-	var Y = lineEnd.y - lineBeginning.y;
-	var X = lineEnd.x - lineBeginning.x;
-	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
-	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
-	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
-	var line = document.createElement("span");
+};function Pair(keyData, valueData) {
 
-	// if (nodeOne.className === "correct") line.className = "line-correct";
+	this.createLiNode = function(nodeData) {
+		var liNode = document.createElement('li');
+		liNode.innerHTML = nodeData;
+		return liNode;
+	}
+	this.setValue = function(valueToAssign){
+		this.assignedValue = valueToAssign;
+	}
+	this.check = function() {
+		if (this.valueNode.innerHTML === this.assignedValue) {
+			this.markCorrect();
+			this.moveUp();
+			return true;
+		}
+		else this.highlightMistake();
+		return false;
+	}
+	this.drawLine = function(parent, newLine) {
+		this.line = newLine;
+		parent.appendChild(this.line);
+	}
+	this.removeLine = function() {
+		this.line.parentNode.removeChild(this.line);
+	}
+	this.moveUp = function() {
+		var keyParent = this.keyNode.parentNode;
+		keyParent.removeChild(this.keyNode);
+		keyParent.insertBefore(this.keyNode, keyParent.childNodes[0]);
 
-	line.className = "line";
-	var keyId = nodeOne.id;
-	line.id = "l" + keyId.substring(keyId.length - 1);
-
-	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
-
-	line.style.width = round(lineWidth, 1) + "px";
-	line.style.marginTop = round(linePosition.y, 1) + "px";
-	line.style.marginLeft = round(linePosition.x, 1) + "px";
-	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.transform 		= "rotate(" + lineAngle + "deg)";
-
-	return line;
-}
-
-function displayScore() {
-	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
-	message(scoreMessage);
+		var valueParent = this.valueNode.parentNode;
+		valueParent.removeChild(this.valueNode);
+		valueParent.insertBefore(this.valueNode, valueParent.childNodes[0]);
+	}
+	this.markCorrect = function(){
+		this.keyNode.className = "correct";
+		this.valueNode.className = "correct";
+	}
+	this.highlightMistake = function(){
+		this.keyNode.className = "mistake";
+		this.valueNode.className = "mistake";
+	}
+	this.keyNode = this.createLiNode(keyData);
+	this.valueNode = this.createLiNode(valueData);
+	this.assignedValue;
+	this.line;
 };function makeConnection(button) {
 
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
-	else button.className = "";
+	else button.removeAttribute("class");
 
 	//checking if a button in the same column was not clicked already
-	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].className = "";
-	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].className = "";
+	if (isKey(button) && !!lineNodes["key"]) lineNodes["key"].removeAttribute("class");
+	else if (!isKey(button) && !!lineNodes["value"]) lineNodes["value"].removeAttribute("class");
 
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
 		var number = button.id.substring(button.id.length - 1);
 		var lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
-		if (!!byId(lookupValueId)) byId(lookupValueId).id = "";
+		if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
 	}
 
 	//putting into lineNodes associative array
@@ -235,32 +253,36 @@ function displayScore() {
 
 function checkPairs() {
 	var lines = byClassName("line");
-	if (lines.length === minPairsGenerated) {
+	if ((lines.length + correct) >= minPairsGenerated) {
 
 		lineNodes = [];
+		var currentMistakes = mistakes;
+
 		//checking
-		for (var i = lines.length - 1; i >= 0; i--) {
-			pairsInUse["k" + i].check();
-			console.log(i);
+		for (var i = lines.length + (correct % 4) - 1; i >= 0; i--) {
+			if (pairsInUse["k" + i].keyNode.className !== "correct") {
+				if (pairsInUse["k" + i].check()) correct++;
+				else mistakes++;
+			}
 		}
 
-		mistakes += byClassName("mistake").length;
+		//removing ids and classes to enable further checks
+		var valueParent = byId("rightcol");
+		for (var i = 0; i < valueParent.childNodes.length; i++) {
+			valueParent.childNodes[i].removeAttribute("id");
+		}
 
-
-		setTimeout(function() {clearClass("mistake")}, 500);
-
-
-		//if mistake
-		/*if (mistakes === 0) {
+		if (currentMistakes === mistakes) {
 			setTimeout(function() {
-				generatePairs();
 				removeAllChildren("pair-list");
+				generatePairs();
 			}, 1000);
 		} else {
 			setTimeout(function() {
 				clearClass("mistake");
 			}, 1000);
-		}*/
+		}
+
 		removeTagWithClass("line");
 	} else {
 		message("Please connect all bubbles.");
@@ -287,7 +309,7 @@ function generatePairs() {
 		indexesUsed = [];
 	}
 
-	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase);
+	indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase, indexesUsed);
 	pairsInUse = pairArrayFromIndexes(indexesFromDB, pairDatabase);
 
 	indexesUsed.concat(indexesFromDB);
@@ -306,6 +328,15 @@ function generatePairs() {
 		byId("rightcol").appendChild(value);
 	}
 	pairsInUse = associativePairArray;
+
+	/*checkbutton positioning changing
+	bad, bad code!!!!!
+	fuck it, laters buttony
+	var checkButtonMarginTop = byId("leftcol").lastChild.getBoundingClientRect().bottom - 40; // magic
+	var checkButtonMarginLeft = byId("leftcol").getBoundingClientRect().right - 178; //magic
+	checkbutton.style.marginTop = checkButtonMarginTop + "px";
+	checkbutton.style.marginLeft = checkButtonMarginLeft + "px";*/
+
 }
 
 /*function addPair() {
