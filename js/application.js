@@ -10,10 +10,9 @@ function makeConnection(button) {
 
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
-		var number = button.id.substring(button.id.length - 1);
-		var lookupLineId = "l" + number, lookupValueId = "v" + number;
+		var number = button.id.substring(button.id.length - 1), lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
-		if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
+		else if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
 	}
 
 	//putting into lineNodes associative array
@@ -24,7 +23,7 @@ function makeConnection(button) {
 	if (!!lineNodes["key"] && !!lineNodes["value"]) {
 		var pair = pairsInUse[lineNodes["key"].id];
 		pair.setValue(lineNodes["value"].innerHTML);
-		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+		pair.drawLine(byId("pair-list"), new Line(lineNodes["key"], lineNodes["value"], byId("pair-list")));
 
 		setTimeout(function() {clearClass("selected")}, 300);
 		lineNodes = [];
@@ -70,7 +69,7 @@ function checkPairs() {
 
 		removeTagWithClass("line");
 	} else {
-		message("Please connect all bubbles.");
+		message("Please connect all bubbles.", byTag('main')[0]);
 	}
 
 }
@@ -87,7 +86,7 @@ function generatePairs() {
 	}
 	if (!diff) {
 		//gui stuff
-		displayScore();
+		message(getScoreMessage(), byTag('main')[0]);
 		startButton.style.display = "inline-block";
 		startButton.innerHTML = "start over";
 
@@ -113,15 +112,6 @@ function generatePairs() {
 		byId("rightcol").appendChild(value);
 	}
 	pairsInUse = associativePairArray;
-
-	/*checkbutton positioning changing
-	bad, bad code!!!!!
-	fuck it, laters buttony
-	var checkButtonMarginTop = byId("leftcol").lastChild.getBoundingClientRect().bottom - 40; // magic
-	var checkButtonMarginLeft = byId("leftcol").getBoundingClientRect().right - 178; //magic
-	checkbutton.style.marginTop = checkButtonMarginTop + "px";
-	checkbutton.style.marginLeft = checkButtonMarginLeft + "px";*/
-
 }
 
 /*function addPair() {

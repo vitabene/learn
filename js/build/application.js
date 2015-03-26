@@ -25,56 +25,19 @@ function init() {
 			makeConnection(e.target);
 		}
 	});
-};function makeVisualConnection(nodeOne, nodeTwo) {
-	//
-	var rect1 = nodeOne.getBoundingClientRect(), rect2 = nodeTwo.getBoundingClientRect(), outerRect = byId("pair-list").getBoundingClientRect();
-	var height1 = rect1.bottom - rect1.top, height2 = rect2.bottom - rect2.top;
-	var lineBeginning = {x: rect1.right, y: rect1.top + (height1/2)};
-	var lineEnd = { x: rect2.left, y: rect2.top + (height2/2)};
-	var Y = lineEnd.y - lineBeginning.y;
-	var X = lineEnd.x - lineBeginning.x;
-	var lineWidth = Math.sqrt(Math.pow(Y, 2) + Math.pow(X, 2));
-	var lineAngle = round(Math.asin(Y/lineWidth) * (180/Math.PI), 1);
-	var linePosition = {x: lineBeginning.x + (X/2) - (lineWidth/2) - outerRect.left, y: lineBeginning.y + (Y/2) - outerRect.top + 3	};
-	var line = document.createElement("span");
-
-	// if (nodeOne.className === "correct") line.className = "line-correct";
-
-	line.className = "line";
-	var keyId = nodeOne.id;
-	line.id = "l" + keyId.substring(keyId.length - 1);
-
-	nodeTwo.id = "v" + keyId.substring(keyId.length - 1);
-
-	line.style.width = round(lineWidth, 1) + "px";
-	line.style.marginTop = round(linePosition.y, 1) + "px";
-	line.style.marginLeft = round(linePosition.x, 1) + "px";
-	line.style.webkitTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.MozTransform 	= "rotate(" + lineAngle + "deg)";
-	line.style.msTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.OTransform 		= "rotate(" + lineAngle + "deg)";
-	line.style.transform 		= "rotate(" + lineAngle + "deg)";
-
-	return line;
-}
-
-function displayScore() {
-	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
-	message(scoreMessage);
-};function shuffleArray(a)	{
+};function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
+function byTag(tag) { return document.getElementsByTagName(tag);}
+function byClassName(className) { return document.getElementsByClassName(className);}
+function byId(id) {	return document.getElementById(id);}
+function shuffleArray(a)	{
 	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
 		return a;
 }
-
 function getChildrenOfId(id) {
 	var nodeList = byId(id).childNodes, array = [];
 	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
 		return array;
 }
-function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
-function byTag(tag) { return document.getElementsByTagName(tag);}
-function byClassName(className) { return document.getElementsByClassName(className);}
-function byId(id) {	return document.getElementById(id);}
 function clearClass(clearClassName) {
 	var lis = byClassName(clearClassName);
 	if (lis.length === 0) return;
@@ -82,7 +45,6 @@ function clearClass(clearClassName) {
 		lis[i].className = lis[i].className.replace(clearClassName, "");
 	}
 }
-
 function message(messageText, parent) {
 	var message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
 
@@ -92,9 +54,9 @@ function message(messageText, parent) {
 	removeButton.id = 'remove-message';
 	removeButton.innerHTML = 'X';
 
-	parent.insertBefore(message, parent.childNodes[0]);
+	parent.insertBefore(message, parent.firstChild);
 
-	message.appendChild(text);
+	message.appendChild(text)
 	message.appendChild(removeButton);
 
 	removeButton.addEventListener("click", function() {
@@ -103,9 +65,9 @@ function message(messageText, parent) {
 	return true;
 }
 function removeTagWithClass(className) {
-	var paras = document.getElementsByClassName(className);
-	while(paras[0]) {
-		paras[0].parentNode.removeChild(paras[0]);
+	var parameters = document.getElementsByClassName(className);
+	while(parameters[0]) {
+		parameters[0].parentNode.removeChild(parameters[0]);
 	}​
 }
 function arrayFromCollection(collection) {
@@ -149,7 +111,6 @@ function randomIndexesFromDB(numberOfFields, databaseArray, indexesUsed) {
 	}
 	return indexesArray;
 }
-
 function pairArrayFromIndexes(indexesArray, databaseArray) {
 	var pairsArray = [];
 	for (var i = 0; i < indexesArray.length; i++) {
@@ -157,6 +118,10 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		pairsArray.push(pair);
 	}
 	return pairsArray;
+}
+function getScoreMessage() {
+	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
+	return scoreMessage;
 };function Pair(keyData, valueData) {
 
 	this.createLiNode = function(nodeData) {
@@ -184,12 +149,10 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		this.line.parentNode.removeChild(this.line);
 	}
 	this.moveUp = function() {
-		var keyParent = this.keyNode.parentNode;
+		var keyParent = this.keyNode.parentNode, valueParent = this.valueNode.parentNode;
 		keyParent.removeChild(this.keyNode);
-		keyParent.insertBefore(this.keyNode, keyParent.childNodes[0]);
-
-		var valueParent = this.valueNode.parentNode;
 		valueParent.removeChild(this.valueNode);
+		keyParent.insertBefore(this.keyNode, keyParent.childNodes[0]);
 		valueParent.insertBefore(this.valueNode, valueParent.childNodes[0]);
 	}
 	this.markCorrect = function(){
@@ -207,14 +170,32 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 }
 
 function Line(keyNode, valueNode, parent) {
-	this.boundingRects = [keyNode.getBoundingClientRect(), valueNode.getBoundingClientRect(), parentNode.getBoundingClientRect()];
-	this.nodeHeight = boundingRects[0].bottom - boundingRects[0].top;
-	this.lineBeginning =  {x: boundingRects[0].right, y: boundingRects[0].top + (nodeHeight/2)};
-	this.lineEnd = { x: boundingRects[1].left, y: boundingRects[1].top + (nodeHeight/2)};
-	this.lineSpan = {x: this.lineEnd.x - this.lineBeginning.x, y: this.lineEnd.y - this.lineBeginning.y};
-	this.lineWidth = Math.sqrt(Math.pow(this.lineSpan.x, 2) + Math.pow(this.lineSpan.y, 2));
-	this.lineAngle = round(Math.asin(this.lineSpan.y/lineWidth) * (180/Math.PI), 1);
+	var boundingRects = [keyNode.getBoundingClientRect(), valueNode.getBoundingClientRect(), parent.getBoundingClientRect()],
+	nodeHeight = boundingRects[0].bottom - boundingRects[0].top,
+	beginning =  {x: boundingRects[0].right, y: boundingRects[0].top + (nodeHeight/2)},
+	end = { x: boundingRects[1].left, y: boundingRects[1].top + (nodeHeight/2)},
+	rectangle = {x: end.x - beginning.x, y: end.y - beginning.y},
+	length = Math.sqrt(Math.pow(rectangle.x, 2) + Math.pow(rectangle.y, 2)),
+	angle = Math.asin(rectangle.y/length) * (180/Math.PI),
+	position = {x: beginning.x + (rectangle.x - length)/2 - boundingRects[2].left, y: beginning.y + (rectangle.y/2) - boundingRects[2].top};
 
+	this.lineElement = document.createElement("span");
+	this.lineElement.className = "line";
+
+	var addStyles = function(line) {
+		line.style.width = round(length, 1) + "px";
+		line.style.marginTop = round(position.y, 1) + "px";
+		line.style.marginLeft = round(position.x, 1) + "px";
+		if (angle !== 0) line.style.webkitTransform = line.style.MozTransform = line.style.msTransform = line.style.OTransform = line.style.transform = "rotate(" + round(angle, 1) + "deg)";
+	}
+
+	addStyles(this.lineElement);
+
+	var keyId = keyNode.id;
+	this.lineElement.id = "l" + keyId.substring(keyId.length - 1);
+	valueNode.id = "v" + keyId.substring(keyId.length - 1);
+
+	return this.lineElement;
 };function makeConnection(button) {
 
 	//highlighting selected node
@@ -227,10 +208,9 @@ function Line(keyNode, valueNode, parent) {
 
 	//removing line immediately with id l + id of value or key
 	if (!!button.id) {
-		var number = button.id.substring(button.id.length - 1);
-		var lookupLineId = "l" + number, lookupValueId = "v" + number;
+		var number = button.id.substring(button.id.length - 1), lookupLineId = "l" + number, lookupValueId = "v" + number;
 		if (!!byId(lookupLineId)) byId(lookupLineId).parentNode.removeChild(byId(lookupLineId));
-		if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
+		else if (!!byId(lookupValueId)) byId(lookupValueId).removeAttribute("id");
 	}
 
 	//putting into lineNodes associative array
@@ -241,7 +221,7 @@ function Line(keyNode, valueNode, parent) {
 	if (!!lineNodes["key"] && !!lineNodes["value"]) {
 		var pair = pairsInUse[lineNodes["key"].id];
 		pair.setValue(lineNodes["value"].innerHTML);
-		pair.drawLine(byId("pair-list"), makeVisualConnection(lineNodes["key"], lineNodes["value"]));
+		pair.drawLine(byId("pair-list"), new Line(lineNodes["key"], lineNodes["value"], byId("pair-list")));
 
 		setTimeout(function() {clearClass("selected")}, 300);
 		lineNodes = [];
@@ -287,7 +267,7 @@ function checkPairs() {
 
 		removeTagWithClass("line");
 	} else {
-		message("Please connect all bubbles.");
+		message("Please connect all bubbles.", byTag('main')[0]);
 	}
 
 }
@@ -304,7 +284,7 @@ function generatePairs() {
 	}
 	if (!diff) {
 		//gui stuff
-		displayScore();
+		message(getScoreMessage(), byTag('main')[0]);
 		startButton.style.display = "inline-block";
 		startButton.innerHTML = "start over";
 
@@ -330,15 +310,6 @@ function generatePairs() {
 		byId("rightcol").appendChild(value);
 	}
 	pairsInUse = associativePairArray;
-
-	/*checkbutton positioning changing
-	bad, bad code!!!!!
-	fuck it, laters buttony
-	var checkButtonMarginTop = byId("leftcol").lastChild.getBoundingClientRect().bottom - 40; // magic
-	var checkButtonMarginLeft = byId("leftcol").getBoundingClientRect().right - 178; //magic
-	checkbutton.style.marginTop = checkButtonMarginTop + "px";
-	checkbutton.style.marginLeft = checkButtonMarginLeft + "px";*/
-
 }
 
 /*function addPair() {

@@ -1,17 +1,16 @@
+function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
+function byTag(tag) { return document.getElementsByTagName(tag);}
+function byClassName(className) { return document.getElementsByClassName(className);}
+function byId(id) {	return document.getElementById(id);}
 function shuffleArray(a)	{
 	for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
 		return a;
 }
-
 function getChildrenOfId(id) {
 	var nodeList = byId(id).childNodes, array = [];
 	for (var i = -1, l = nodeList.length; ++i !== l; array[i] = nodeList[i]);
 		return array;
 }
-function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
-function byTag(tag) { return document.getElementsByTagName(tag);}
-function byClassName(className) { return document.getElementsByClassName(className);}
-function byId(id) {	return document.getElementById(id);}
 function clearClass(clearClassName) {
 	var lis = byClassName(clearClassName);
 	if (lis.length === 0) return;
@@ -19,7 +18,6 @@ function clearClass(clearClassName) {
 		lis[i].className = lis[i].className.replace(clearClassName, "");
 	}
 }
-
 function message(messageText, parent) {
 	var message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
 
@@ -29,9 +27,9 @@ function message(messageText, parent) {
 	removeButton.id = 'remove-message';
 	removeButton.innerHTML = 'X';
 
-	parent.insertBefore(message, parent.childNodes[0]);
+	parent.insertBefore(message, parent.firstChild);
 
-	message.appendChild(text);
+	message.appendChild(text)
 	message.appendChild(removeButton);
 
 	removeButton.addEventListener("click", function() {
@@ -40,9 +38,9 @@ function message(messageText, parent) {
 	return true;
 }
 function removeTagWithClass(className) {
-	var paras = document.getElementsByClassName(className);
-	while(paras[0]) {
-		paras[0].parentNode.removeChild(paras[0]);
+	var parameters = document.getElementsByClassName(className);
+	while(parameters[0]) {
+		parameters[0].parentNode.removeChild(parameters[0]);
 	}​
 }
 function arrayFromCollection(collection) {
@@ -86,7 +84,6 @@ function randomIndexesFromDB(numberOfFields, databaseArray, indexesUsed) {
 	}
 	return indexesArray;
 }
-
 function pairArrayFromIndexes(indexesArray, databaseArray) {
 	var pairsArray = [];
 	for (var i = 0; i < indexesArray.length; i++) {
@@ -94,4 +91,8 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		pairsArray.push(pair);
 	}
 	return pairsArray;
+}
+function getScoreMessage() {
+	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
+	return scoreMessage;
 }
