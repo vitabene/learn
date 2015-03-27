@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="favicon.png">
 
     <script src="./js/build/application.min.js"></script>
 </head>
@@ -14,7 +16,7 @@
     <nav>
         <ul>
             <a href="index.php" class="logo"><li>learn</li></a>
-            <a href="upload.php"><li>upload</li></a>
+            <!-- <a href="upload.php"><li>upload</li></a> -->
         </ul>
     </nav>
     <main class="content">
@@ -23,8 +25,8 @@
             <ul id="rightcol"></ul>
         </div>
         <div class="controls">
-            <button onclick="generatePairs()" id="startbutton">start</button>
-            <button onclick="checkPairs()" id="checkbutton">check</button>
+            <button id="startbutton">start</button>
+            <button id="checkbutton">check</button>
         </div>
     </main>
 </body>

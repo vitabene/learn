@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				separator: ';'
 			},
 			target: {
-				src: ['js/init.js', 'js/gui.js', 'js/helpers.js', 'js/classes.js', 'js/application.js'],
+				src: ['js/init.js', 'js/helpers.js', 'js/Line.js', 'js/Pair.js', 'js/App.js'],
 				dest: 'js/build/application.js'
 			}
 		},
@@ -44,16 +44,9 @@ module.exports = function(grunt) {
 			options: {
 				livereload: true,
 			},
-			all: {
-				files: ['*'],
-				tasks: ['default'],
-				options: {
-					spawn: false,
-				}
-			},
 			scripts: {
 				files: ['js/*.js'],
-				tasks: ['concat', 'default'],
+				tasks: ['default'],
 				options: {
 					spawn: false,
 				}

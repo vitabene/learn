@@ -18,26 +18,7 @@ function clearClass(clearClassName) {
 		lis[i].className = lis[i].className.replace(clearClassName, "");
 	}
 }
-function message(messageText, parent) {
-	var message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
-
-	message.id = 'message';
-	text.innerHTML = messageText;
-
-	removeButton.id = 'remove-message';
-	removeButton.innerHTML = 'X';
-
-	parent.insertBefore(message, parent.firstChild);
-
-	message.appendChild(text)
-	message.appendChild(removeButton);
-
-	removeButton.addEventListener("click", function() {
-		parent.removeChild(this.parentNode);
-	})
-	return true;
-}
-function removeTagWithClass(className) {
+function removeNodesWithClass(className) {
 	var parameters = document.getElementsByClassName(className);
 	while(parameters[0]) {
 		parameters[0].parentNode.removeChild(parameters[0]);
@@ -54,14 +35,10 @@ function arrayFromCollection(collection) {
 	return array;
 }
 function removeAllChildren(id) {
-	var parent = byId(id), leftcol = document.createElement("ul"), rightcol = document.createElement("ul");
+	var parent = byId(id);
 	while (parent.firstChild) {
 		parent.removeChild(parent.firstChild);
 	}
-	leftcol.id = "leftcol";
-	rightcol.id = "rightcol";
-	parent.appendChild(leftcol);
-	parent.appendChild(rightcol);
 }
 function isKey(button) {
 	if (button.id.substring(0, 1) === "k") return true;
@@ -91,8 +68,4 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		pairsArray.push(pair);
 	}
 	return pairsArray;
-}
-function getScoreMessage() {
-	var scoreMessage = "Your score is " + round((pairDatabase.length - mistakes)/pairDatabase.length * 100, 2) + " % = " + (pairDatabase.length - mistakes) + " / " + pairDatabase.length;
-	return scoreMessage;
 }

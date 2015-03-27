@@ -12,13 +12,9 @@ body, nav, ul, table, div {
   margin: 0;
   padding: 0;
 }
-@font-face {
-  font: 'code';
-  src: '../assets/codebold.otf';
-}
 body {
-  background: url('../assets/restaurant.png');
-  font-family: 'Open Sans', sans-serif;
+  background: url('../assets/skulls.png');
+  font-family: 'Raleway','Open Sans', sans-serif;
   position: absolute;
   width: 100%;
 }
@@ -34,7 +30,7 @@ nav {
   position: fixed;
   width: 100%;
   height: auto;
-  background: url('../assets/dark.png') #222222;
+  background: url('../assets/noisy_net.png') #222222;
   z-index: 1000;
   @include box-shadow(0px, 1px, 10px, .2px);
   & ul {
@@ -50,7 +46,7 @@ nav {
       color: #DEFFFE;  //#070015;
       letter-spacing: 5px;
       text-transform: uppercase;
-      font-family:'code';
+      font-family: 'Raleway';
       text-shadow: .3px .3px .3px #fff;
     }
     & .logo {
@@ -122,7 +118,7 @@ input[type='submit'] {
 }
 .line {
   position: absolute;
-  background-color: #FFF0B8;
+  background-color: #5E88D0; //#FFF0B8;
   height: 2px;
   display: block;
   border-radius: 1px;
