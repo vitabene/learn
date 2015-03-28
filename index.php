@@ -1,33 +1,40 @@
-
+<?php
+    require './includes/init.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Learn</title>
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="favicon.png">
-
-    <script src="./js/build/application.min.js"></script>
+    <title>Learn - home</title>
+    <?php require 'includes/head.php'; ?>
 </head>
 <body id="learn">
     <nav>
-        <ul>
-            <a href="index.php" class="logo"><li>learn</li></a>
-            <!-- <a href="upload.php"><li>upload</li></a> -->
-        </ul>
+        <?php require 'includes/nav.php'; ?>
     </nav>
+
     <main class="content">
-        <div id="pair-list">
-            <ul id="leftcol"></ul>
-            <ul id="rightcol"></ul>
-        </div>
-        <div class="controls">
-            <button id="startbutton">start</button>
-            <button id="checkbutton">check</button>
-        </div>
+    <?php if (isset($_GET['id']) && Db::query("SELECT * FROM set_names WHERE id=?", $_GET['id'])) {
+        ?>
+            <div id="pair-list">
+                <ul id="leftcol"></ul>
+                <ul id="rightcol"></ul>
+            </div>
+            <div class="controls">
+                <button id="startbutton" <?php echo "data-set='" . urlencode($_GET['id']) . "'"; ?>>start</button>
+                <button id="checkbutton">check</button>
+            </div>
+    <?php
+        } else {
+            echo "<ul>";
+            $set_names = Db::queryAll("SELECT * FROM set_names");
+            foreach ($set_names as $set) {
+                echo "<a href='?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+            }
+
+            echo "</ul>";
+        }
+    ?>
     </main>
+
 </body>
 </html>

@@ -1,3 +1,4 @@
+var app;
 document.addEventListener("DOMContentLoaded", function(){
 	/*document.onkeydown = function (evt) {
 		var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
@@ -7,21 +8,31 @@ document.addEventListener("DOMContentLoaded", function(){
 	}*/
 
 	//disabled for smooth testing
-
-	/*
-	window.onbeforeunload = function(e) {
+	/* window.onbeforeunload = function(e) {
 	    return "Sure you want to leave?";
 	}*/
 
-	var app = new App();
+	app = new App();
 
-	byId("checkbutton").addEventListener("click", function(){app.checkPairs()});
-	byId("startbutton").addEventListener("click", function(){app.generatePairs()});
-	byId("pair-list").addEventListener("click", function(e) {
-		if (e.target && e.target.nodeName === "LI") {
-			app.connect(e.target);
-		}
-	});
+	if (byId("checkbutton")) {
+		byId("checkbutton").addEventListener("click", function(){app.checkPairs()});
+	}
+	if (byId("startbutton")){
+		byId("startbutton").addEventListener("click", function(){
+			app.populateDatabase(byId("startbutton").dataset.set);
+			// console.log(app.populateDatabase(byId("startbutton").dataset.set));
+			app.generatePairs();
+			// console.log(window.app.pairDatabase);
+		});
+	}
+	if (byId("pair-list")){
+		byId("pair-list").addEventListener("click", function(e) {
+			if (e.target && e.target.nodeName === "LI") {
+				app.connect(e.target);
+			}
+		});
+	}
+
 });;function round(number, numberOfDigits) { return Math.round(number * Math.pow(10, numberOfDigits))/(Math.pow(10, numberOfDigits));}
 function byTag(tag) { return document.getElementsByTagName(tag);}
 function byClassName(className) { return document.getElementsByClassName(className);}
@@ -170,9 +181,48 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 	/*var pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Tyrion", "Lannister"], ["Harry", "Dresden"], ["Bilbo", "Baggins"], ["Max", "McDaniels"], ["Dorian", "Grey"], ["Arya", "Stark"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
 	var pairDatabase = [["Sofoklés", "Král Oidipús"], ["Boccaccio, Giovanni", "Dekameron"], ["Komenský, Jan Amos", "Labyrint světa a ráj srdce"], ["Neruda, Jan", "Balady a romance"], ["Wilde, Oscar", "Jak je důležité míti Filipa"], ["Salinger, Jerome David", "Kdo chytá v žitě"], ["Čapek, Karel", "RUR"], ["Svěrák a Smoljak", "Posel z Liptákova"], ["Vančura, Vladislav", "Rozmarné léto"], ["Bradbury, Ray", "451 ° Fahrenheita"], ["Kafka, Franz", "Proměna"], ["Williams, Tennessee", "Kočka na rozpálené plechové střeše"]];*/
 
-	var minPairsGenerated = 4, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0, correct = 0, pairDatabase = [["Logen", "Nine-fingers"], ["Thorin", "Oakenshield"], ["Kvothe", "Kote"], ["Master", "Elodin"], ["Jon", "Snow"], ["Tywin", "Lannister"], ["Euron", "Greyjoy"], ["Daenarys", "Targaryen"]];
+	var minPairsGenerated = 4, pairsInUse = [], indexesUsed = [], lineNodes = [], mistakes = 0, correct = 0, pairDatabase = [];
+	this.getPairDatabase = function(){
+		return pairDatabase;
+	}
+	this.setPairDatabase = function(array){
+		pairDatabase = array;
+		return true;
+	}
+
+	this.populateDatabase = function(setName){
+		var _this = this;
+		if (setName == "") {
+			return;
+		} else {
+			if (window.XMLHttpRequest) {
+				xmlhttp = new XMLHttpRequest();
+			} else {
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				var jsonObject = JSON.parse(xmlhttp.responseText);
+				var pairsArray = [];
+				Object.keys(jsonObject).map(function(key){
+					var keyValueArray = Array(key).concat(jsonObject[key]);
+					pairsArray.push(keyValueArray);
+				});
+				_this.setPairDatabase(pairsArray);
+				return;
+        	}
+        }
+        xmlhttp.open("GET","getpairs.php?id="+setName,true);
+        xmlhttp.send();
+    }
+
+	}
 
 	this.generatePairs = function() {
+		console.log("gen");
+		var _this = this;
+		console.log(window.app.getPairDatabase());
+		console.log(this);
 		var numberOfPairs = minPairsGenerated, pairsChosen = [], values = [], diff = pairDatabase.length - indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
 
 		startButton.style.display = "none";
@@ -185,7 +235,7 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 		if (diff < numberOfPairs) {
 			numberOfPairs = diff;
 		}
-		if (!diff) {
+		if (!diff && !isNaN(this.getScore())) {
 			//gui stuff
 			this.notify(this.getScore(), byTag('main')[0]);
 			startButton.style.display = "inline-block";
@@ -194,8 +244,8 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 			indexesUsed = [];
 		}
 
-		indexesFromDB = randomIndexesFromDB(numberOfPairs, pairDatabase, indexesUsed);
-		pairsInUse = pairArrayFromIndexes(indexesFromDB, pairDatabase);
+		indexesFromDB = randomIndexesFromDB(numberOfPairs, this.getPairDatabase(), indexesUsed);
+		pairsInUse = pairArrayFromIndexes(indexesFromDB, this.getPairDatabase());
 
 		indexesUsed.concat(indexesFromDB);
 
