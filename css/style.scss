@@ -1,13 +1,29 @@
 @mixin box-shadow($x, $y, $blur, $spread) {
-  -webkit-box-shadow: $x $y $blur $spread rgba(0,0,0,0.75);
-  -moz-box-shadow:    $x $y $blur $spread rgba(0,0,0,0.75);
   box-shadow:         $x $y $blur $spread rgba(0,0,0,0.75);
 }
 @mixin rotate($deg) {
-  -ms-transform: rotate($deg);
-  -webkit-transform: rotate($deg);
   transform: rotate($deg);
 }
+@mixin plus-icon($width, $lineWidth, $color, $borderRadius){
+    margin: ($width - $lineWidth)/2 $lineWidth/2;
+    display: inline-block;
+    position: relative;
+    background: $color;
+    height: $lineWidth;
+    width: $width - $lineWidth;
+    border-radius: $borderRadius;
+  &:after {
+    position: absolute;
+    background: $color;
+    content: "";
+    height: $width - $lineWidth;
+    width: $lineWidth;
+    border-radius: $borderRadius;
+    left: ($width/2) - $lineWidth;
+    top: -($width/2) + $lineWidth;
+  }
+}
+
 body, nav, ul, table, div {
   margin: 0;
   padding: 0;
@@ -35,21 +51,20 @@ nav {
   @include box-shadow(0px, 1px, 10px, .2px);
   & ul {
     width: 50%;
-    margin-left: 25%;
+    margin-left: 15%;
     font-size: 1.1em;
     & li {
       line-height: 40px;
       display: inline-block;
       padding: 0 40px;
+      color: #DEFFFE;
     }
-    &:first-child a {
-      color: #DEFFFE;  //#070015;
+    & a.logo {
+      color: #DEFFFE;
       letter-spacing: 5px;
       text-transform: uppercase;
       font-family: 'Raleway';
       text-shadow: .3px .3px .3px #fff;
-    }
-    & .logo {
       font-size: x-large;
     }
   }
@@ -63,12 +78,34 @@ nav {
   font-size: small;
   text-align: center;
 }
+.set-tile {
+  display: inline-block;
+  padding: 20px;
+  margin: 20px;
+  background: lighten(#D0E9F7, 6%);
+  @include box-shadow(0.5px, 0.5px, 4px, .5px);
+}
+.set-tile:hover {
+  position: relative;
+  top: 2px;
+}
+.heading {
+  padding: 30px;
+  letter-spacing: 3px;
+  color: #04012C;
+  word-spacing: 8px;
+  text-shadow: .3px .3px .3px #000;
+  a {
+    text-decoration: underline;
+  }
+}
 .controls {
   text-align: center;
   clear: both;
   position: static;
   margin-top: 250px;
   & button {
+    clear: both;
     border: 0;
     background-color: #E2E2E2;
     font-size: large;
@@ -90,7 +127,7 @@ input[type='submit'] {
 }
 #pair-list {
   overflow: auto;
-  margin-top: 100px;
+  margin-top: 150px;
   & li {
     background: white;
     padding: 3px;
@@ -108,6 +145,7 @@ input[type='submit'] {
   width: 50%;
 }
 #rightcol {
+  float: right;
   margin-left: 50%;
 }
 #leftcol li {
@@ -118,7 +156,7 @@ input[type='submit'] {
 }
 .line {
   position: absolute;
-  background-color: #5E88D0; //#FFF0B8;
+  background-color: #5E88D0;
   height: 2px;
   display: block;
   border-radius: 1px;
@@ -166,7 +204,4 @@ input[type='submit'] {
 .correct {
   background: #17BB1F !important;
   color: white;
-}
-.wrong {
-  display: none;
 }

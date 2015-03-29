@@ -1,33 +1,36 @@
-
+<?php
+require './includes/init.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Learn</title>
-    <meta charset="UTF-8">
+    <title>Learn - home</title>
+    <?php require 'includes/head.php'; ?>
 
-    <link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:500' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="favicon.png">
-
-    <script src="./js/build/application.min.js"></script>
 </head>
 <body id="learn">
     <nav>
-        <ul>
-            <a href="index.php" class="logo"><li>learn</li></a>
-            <!-- <a href="upload.php"><li>upload</li></a> -->
-        </ul>
+        <?php require 'includes/nav.php'; ?>
     </nav>
+
     <main class="content">
-        <div id="pair-list">
-            <ul id="leftcol"></ul>
-            <ul id="rightcol"></ul>
+        <div class="heading">
+            <h1>choose a set to practise</h1>
         </div>
-        <div class="controls">
-            <button id="startbutton">start</button>
-            <button id="checkbutton">check</button>
+        <?php
+
+        echo "<ul>";
+        $set_names = Db::queryAll("SELECT * FROM set_names");
+        foreach ($set_names as $set) {
+            echo "<a class='set-tile' href='practice.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+        }
+        echo "</ul>";
+
+        ?>
+        <div class="heading">
+            <a href="upload.php"><h2>or create your own</h2></a>
         </div>
     </main>
+
 </body>
 </html>
