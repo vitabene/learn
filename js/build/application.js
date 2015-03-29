@@ -155,6 +155,7 @@ function pairArrayFromIndexes(indexesArray, databaseArray) {
 	lineParent: {},
 	startButton: {},
 	checkButton: {},
+	message: {},
 	time: 0
 };
 
@@ -181,6 +182,7 @@ App.populateDatabase = function(setName){
 		xmlhttp.open("GET","getpairs.php?id=" + setName, true);
 		xmlhttp.send();
 	}
+	return true;
 }
 
 App.generatePairs = function() {
@@ -198,16 +200,16 @@ App.generatePairs = function() {
 	if (indexesLeft === 0) {
 			//gui stuff
 			var endTime = new Date().getTime();
-			App.time = Math.ceil((endTime - App.time)/1000);
 
-			console.log(App.time + " seconds");
-			console.log(App.getScore());
-			App.startButton.innerHTML = "start over";
-			App.startButton.style.display = "inline-block";
+			//the -1 because of 1 second delay between checking and generating
+			App.time = Math.floor((endTime - App.time)/1000) - 1;
+
+			//redirect to results.php
+			App.sendDataTo("results.php", 'post');
+			// console.log(App.getScore());
 
 			// App.indexesUsed = [];
 
-			//redirect to results.php
 		}
 
 		indexesFromDB = randomIndexesFromDB(numberOfPairs, App.pairDatabase, App.indexesUsed);
@@ -232,29 +234,30 @@ App.generatePairs = function() {
 		App.lineParent.style.height = (20 + lastYCoord) + "px";
 		App.checkButton.style.marginTop = (lastYCoord - firstYCoord + 50) + "px";
 		App.lineParent.appendChild(App.checkButton);
-	}
-
-	App.notify = function(messageText, parent) {
-		var message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
-
-		message.id = 'message';
-		text.innerHTML = messageText;
-
-		removeButton.id = 'remove-message';
-		removeButton.innerHTML = 'X';
-
-		message.appendChild(text)
-		message.appendChild(removeButton);
-
-		parent.insertBefore(message, parent.firstChild);
-
-		removeButton.addEventListener("click", function() {
-			parent.removeChild(this.parentNode);
-		});
-
 		return true;
 	}
-	App.connect = function(button) {
+
+App.notify = function(messageText) {
+	App.message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
+
+	App.message.id = 'message';
+	text.innerHTML = messageText;
+
+	removeButton.id = 'remove-message';
+	removeButton.innerHTML = 'X';
+
+	App.message.appendChild(text)
+	App.message.appendChild(removeButton);
+
+	App.messageParent.insertBefore(App.message, App.messageParent.firstChild);
+
+	removeButton.addEventListener("click", function() {
+		App.messageParent.removeChild(this.parentNode);
+		App.message = {};
+	});
+	return true;
+}
+App.connect = function(button) {
 
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
@@ -284,12 +287,48 @@ App.generatePairs = function() {
 		setTimeout(function() {clearClass("selected")}, 300);
 		App.lineNodes = [];
 	}
+	return true;
+
 }
 App.refresh = function() {
 	App.lineNodes = [];
 	App.pairsInUse = [];
 	removeAllChildren("rightcol");
 	removeAllChildren("leftcol");
+	return true;
+}
+App.sendDataTo = function(url, method){
+	var form = document.createElement('form');
+	form.method = method;
+	form.action = url;
+
+	//sending number of mistakes, number of pairs, time for set, JSON mistakes, set id
+	var inputs = [];
+	for (var i = 0; i < 4; i++) {
+		inputs[i] = document.createElement('input');
+	}
+
+	inputs[0].name = 'num_of_mistakes';
+	inputs[0].value = App.mistakes.length;
+
+	inputs[1].name = 'num_of_pairs';
+	inputs[1].value = App.pairDatabase.length;
+
+	inputs[2].name = 'time';
+	inputs[2].value = App.time;
+
+	//cannot pass Pair object, need to add toString() method returning pre-JSON Object to Pair class
+	inputs[3].name = 'json_mistakes';
+	console.log(App.mistakes);
+	inputs[3].value = App.mistakes;
+
+	inputs[3].name = 'set_id';
+	inputs[3].value = App.lineParent.dataset.set;
+
+	for (var i = inputs.length - 1; i >= 0; i--) {
+		form.appendChild(inputs[i]);
+	}
+	form.submit();
 }
 App.checkPairs = function() {
 	var lines = byClassName("line");
@@ -326,8 +365,9 @@ App.checkPairs = function() {
 		removeNodesWithClass("line");
 
 	} else {
-		App.notify("Please connect all bubbles.", byTag('main')[0]);
+		if (!App.message.childNodes) App.notify("Please connect all bubbles.");
 	}
+	return true;
 }
 App.getScore = function() {
 	var pairs = App.pairDatabase.length, mistakes = App.mistakes.length, scoreMessage = "Your score is " + round((pairs - mistakes)/pairs * 100, 2) + " % = " + (pairs - mistakes) + " / " + pairs;
@@ -344,6 +384,8 @@ App.init = function(){
 	/* window.onbeforeunload = function(e) {
 	    return "Sure you want to leave?";
 	}*/
+
+	App.messageParent = byTag('main')[0];
 	App.lineParent = byId("pair-list");
 	App.populateDatabase(App.lineParent.dataset.set);
 	App.startButton = document.createElement("button"), App.checkButton = document.createElement("button");
@@ -365,5 +407,6 @@ App.init = function(){
 			}
 		}
 	});
+	return true;
 }
 document.addEventListener("DOMContentLoaded", App.init());

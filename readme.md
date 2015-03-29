@@ -2,7 +2,7 @@ LEARN
 javascript app for memorizing stuff
 
 TO DO:
-- results page
+- results page //w'kin' on it
 - view and modify sets
 - drag and drop outlines
 - browser compatibility
@@ -13,5 +13,4 @@ TO DO:
 - admin functionality
 - report problem
 - Czech translation
-- measure time for completing a set
 - php login functionality

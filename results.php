@@ -2,6 +2,8 @@
 require './includes/init.php';
 
 
+var_dump($_POST);
+
 ?>
 <!DOCTYPE html>
 <html>
