@@ -5,12 +5,16 @@ var App = {
 	indexesUsed: [],
 	lineNodes: [],
 	mistakes: [],
-	correct: 0
+	correct: 0,
+	lineParent: {},
+	startButton: {},
+	checkButton: {},
+	time: 0
 };
 
 App.populateDatabase = function(setName){
 	if (setName == "") {
-		console.log("no ar passed");
+		console.log("no arg passed");
 		return;
 	} else {
 		if (window.XMLHttpRequest) {
@@ -34,39 +38,54 @@ App.populateDatabase = function(setName){
 }
 
 App.generatePairs = function() {
-	var numberOfPairs = App.pairsGenerated, pairsChosen = [], values = [], indexesLeft = App.pairDatabase.length - App.indexesUsed.length, startButton = byId("startbutton"), checkButton = byId("checkbutton"), associativePairArray = [];
+	var numberOfPairs = App.pairsGenerated, pairsChosen = [], valueNodes = [], indexesLeft = App.pairDatabase.length - App.indexesUsed.length, associativePairArray = [];
 
 	App.refresh();
+	App.lineParent.removeChild(App.checkButton);
+
+	//if there is less pairs than is to be generated
+	if (App.pairDatabase.length < App.pairsGenerated) App.pairsGenerated = App.pairDatabase.length;
 
 	if (indexesLeft < numberOfPairs) {
 		numberOfPairs = indexesLeft;
 	}
 	if (indexesLeft === 0) {
 			//gui stuff
-			console.log(App.getScore());
-			startButton.style.display = "inline-block";
-			startButton.innerHTML = "start over";
+			var endTime = new Date().getTime();
+			App.time = Math.ceil((endTime - App.time)/1000);
 
-			App.indexesUsed = [];
+			console.log(App.time + " seconds");
+			console.log(App.getScore());
+			App.startButton.innerHTML = "start over";
+			App.startButton.style.display = "inline-block";
+
+			// App.indexesUsed = [];
+
+			//redirect to results.php
 		}
 
 		indexesFromDB = randomIndexesFromDB(numberOfPairs, App.pairDatabase, App.indexesUsed);
 		App.pairsInUse = pairArrayFromIndexes(indexesFromDB, App.pairDatabase);
 
 		for (var i = 0; i < App.pairsInUse.length; i++) {
-			values.push(App.pairsInUse[i].valueNode);
+			valueNodes.push(App.pairsInUse[i].valueNode);
 		}
 
-		values = shuffleArray(values);
-
+		valueNodes = shuffleArray(valueNodes);
+		var lastYCoord = 0, firstYCoord = 0;
 		for (i = 0; i < numberOfPairs; i++) {
-			var key = App.pairsInUse[i].keyNode, value = values[i];
+			var key = App.pairsInUse[i].keyNode, value = valueNodes[i];
 			key.id = "k" + i;
 			associativePairArray[key.id] = App.pairsInUse[i];
 			byId("leftcol").appendChild(key);
 			byId("rightcol").appendChild(value);
+			if (i === 0) firstYCoord = value.getBoundingClientRect().top;
+			lastYCoord = value.getBoundingClientRect().bottom;
 		}
 		App.pairsInUse = associativePairArray;
+		App.lineParent.style.height = (20 + lastYCoord) + "px";
+		App.checkButton.style.marginTop = (lastYCoord - firstYCoord + 50) + "px";
+		App.lineParent.appendChild(App.checkButton);
 	}
 
 	App.notify = function(messageText, parent) {
@@ -114,7 +133,7 @@ App.generatePairs = function() {
 	if (!!App.lineNodes["key"] && !!App.lineNodes["value"]) {
 		var pair = App.pairsInUse[App.lineNodes["key"].id];
 		pair.setValue(App.lineNodes["value"].innerHTML);
-		byId("pair-list").appendChild(new Line(App.lineNodes["key"], App.lineNodes["value"], byId("pair-list")));
+		App.lineParent.insertBefore(new Line(App.lineNodes["key"], App.lineNodes["value"], App.lineParent), App.checkButton);
 
 		setTimeout(function() {clearClass("selected")}, 300);
 		App.lineNodes = [];
@@ -179,27 +198,26 @@ App.init = function(){
 	/* window.onbeforeunload = function(e) {
 	    return "Sure you want to leave?";
 	}*/
+	App.lineParent = byId("pair-list");
+	App.populateDatabase(App.lineParent.dataset.set);
+	App.startButton = document.createElement("button"), App.checkButton = document.createElement("button");
+	App.startButton.innerHTML = "start";
+	App.checkButton.innerHTML = "check";
+	App.lineParent.appendChild(App.startButton);
+	App.lineParent.appendChild(App.checkButton);
 
-	App.populateDatabase(byId("startbutton").dataset.set);
-
-	byId("startbutton").addEventListener("click", function(){
-		App.generatePairs();
-		//removing heading, needless to say - to refactor
-		this.parentNode.parentNode.removeChild(this.parentNode.parentNode.childNodes[1]);
-		//removing startbutton
-		this.style.display = "none";
-	});
-
-	byId("checkbutton").addEventListener("click", function(){
-		App.checkPairs();
-	});
-
-	byId("pair-list").addEventListener("click", function(e) {
-		if (e.target && e.target.nodeName === "LI") {
-			App.connect(e.target);
+	App.lineParent.addEventListener("click", function(e) {
+		if (e.target) {
+			if (e.target.nodeName === "LI") App.connect(e.target);
+			else if (e.target === App.startButton) {
+				App.generatePairs();
+				removeNodesWithClass("heading");
+				App.startButton.style.display = "none";
+				App.time = new Date().getTime();
+			} else if (e.target === App.checkButton) {
+				App.checkPairs();
+			}
 		}
 	});
 }
-
-
 document.addEventListener("DOMContentLoaded", App.init());

@@ -28,7 +28,8 @@ require './includes/init.php';
 
         ?>
         <div class="heading">
-            <a href="upload.php"><h2>or create your own</h2></a>
+            <h2>or create your own</h2>
+            <a href="upload.php"><span class="plus"></span></a>
         </div>
     </main>
 

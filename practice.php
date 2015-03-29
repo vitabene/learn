@@ -20,15 +20,10 @@ if (isset($_GET['id']) && Db::query("SELECT * FROM set_names WHERE id=?", $_GET[
             <div class="heading">
             <h2>press start when you are ready</h2>
             </div>
-            <div id="pair-list">
+            <div id="pair-list" <?php echo "data-set='" . urlencode($_GET['id']) . "' "; ?>>
                 <ul id="leftcol"></ul>
                 <ul id="rightcol"></ul>
             </div>
-            <div class="controls">
-                <button id="startbutton" <?php echo "data-set='" . urlencode($_GET['id']) . "' "; ?>>start</button>
-                <button id="checkbutton">check</button>
-            </div>
-
         </main>
 
         <script src="./js/build/application.min.js"></script>

@@ -64,7 +64,11 @@ function randomIndexesFromDB(numberOfFields, databaseArray, indexesUsed) {
 function pairArrayFromIndexes(indexesArray, databaseArray) {
 	var pairsArray = [];
 	for (var i = 0; i < indexesArray.length; i++) {
-		var pair = new Pair(databaseArray[indexesArray[i]][0], databaseArray[indexesArray[i]][1]);
+		var valueNumber = 1, keyWithValues = databaseArray[indexesArray[i]];
+		if (keyWithValues.length > 2) {
+			valueNumber = Math.floor((Math.random() * (keyWithValues.length - 1))) + 1;
+		}
+		var pair = new Pair(databaseArray[indexesArray[i]][0], databaseArray[indexesArray[i]][valueNumber]);
 		pairsArray.push(pair);
 	}
 	return pairsArray;
