@@ -23,10 +23,10 @@ module.exports = function(grunt) {
 		},
 		concat: {
 			options: {
-				separator: ';'
+				separator: ''
 			},
 			target: {
-				src: ['js/init.js', 'js/helpers.js', 'js/Line.js', 'js/Pair.js', 'js/App.js'],
+				src: ['js/helpers.js', 'js/Line.js', 'js/Pair.js', 'js/App.js'],
 				dest: 'js/build/application.js'
 			}
 		},
@@ -66,7 +66,15 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		clean: ['assets/build/', 'js/build/'],
+		clean: ['assets/build/', 'js/build/', 'css/style.css'],
+		autoprefixer: {
+			options: {
+  		    	browsers: ['last 2 versions', 'ie 7', 'ie 8', 'ie 9']
+  			},
+  			css: {
+	  		    src: 'css/style.css'
+  			}
+  		},
 		sass: {
 			dist: {
 				options: {
