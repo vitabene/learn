@@ -246,7 +246,6 @@ App.notify = function(messageText) {
 	return true;
 }
 App.connect = function(button) {
-
 	//highlighting selected node
 	if (button.className !== "selected") button.className = "selected";
 	else button.removeAttribute("class");
@@ -307,8 +306,7 @@ App.sendDataTo = function(url, method){
 
 	//cannot pass Pair object, need to add toString() method returning pre-JSON Object to Pair class
 	// inputs[3].name = 'json_mistakes';
-	// console.log(App.mistakes);
-	// inputs[3].value = App.mistakes;
+	// inputs[3].value = App.getJSONMistakes();
 
 	inputs[3].name = 'set_id';
 	inputs[3].value = App.lineParent.dataset.set;
@@ -317,6 +315,7 @@ App.sendDataTo = function(url, method){
 		form.appendChild(inputs[i]);
 	}
 	form.submit();
+	// console.log("form submitted");
 }
 App.checkPairs = function() {
 	var lines = byClassName("line");
@@ -366,6 +365,21 @@ App.checkPairs = function() {
 App.getScore = function() {
 	var pairs = App.pairDatabase.length, mistakes = App.mistakes.length, scoreMessage = "Your score is " + round((pairs - mistakes)/pairs * 100, 2) + " % = " + (pairs - mistakes) + " / " + pairs;
 	return scoreMessage;
+}
+App.getJSONMistakes = function() {
+	var mistakesJSONObject = {};
+	for (var i = 0; i < App.mistakes.length; i++) {
+		var pair = App.mistakes[i], tempArr = [];
+		tempArr[0] = pair.keyNode.innerHTML;
+		tempArr[1] = pair.valueNode.innerHTML;
+		tempArr[2] = pair.assignedValue;
+		tempArr = tempArr.join();
+		console.log(tempArr);
+		//assigned value is correct by rounds, need to address
+		mistakesJSONObject[i] = tempArr;
+	}
+	console.log(JSON.stringify(mistakesJSONObject));
+	return JSON.stringify(mistakesJSONObject);
 }
 App.init = function(){
 	/*document.onkeydown = function (evt) {

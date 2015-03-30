@@ -2,6 +2,7 @@
 require './includes/init.php';
 
 if (isset($_POST['num_of_mistakes']) && $_POST['num_of_pairs'] && $_POST['time'] && $_POST['set_id']) {
+	// echo $_POST['json_mistakes'];
 	$mistakes = intval($_POST['num_of_mistakes']);
 	$pairs = intval($_POST['num_of_pairs']);
 	$score = (1 - round($mistakes/$pairs, 2))*100;
