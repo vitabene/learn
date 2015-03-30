@@ -71,6 +71,10 @@ nav {
       text-shadow: .3px .3px .3px #fff;
       font-size: x-large;
     }
+    & a li:hover {
+      color: #A3D9FF;
+      text-shadow: .5px .5px .5px #000;
+    }
   }
   & .settings {
     position: static;
@@ -107,14 +111,13 @@ nav {
   background: lighten(#D0E9F7, 6%);
   @include box-shadow(0.5px, 0.5px, 4px, .5px);
 }
-.set-tile:hover {
+.set-tile:hover, .plus:hover, button:hover {
   position: relative;
   top: 2px;
 }
 .heading {
   padding: 30px;
   letter-spacing: 3px;
-  color: #04012C;
   word-spacing: 8px;
   text-shadow: .3px .3px .3px #000;
   a {
@@ -134,7 +137,7 @@ input[type='submit'] {
 }
 #pair-list {
   position: relative;
-  overflow: auto;
+  overflow: hidden;
   height: auto;
   margin-top: 150px;
   & li {
@@ -147,17 +150,19 @@ input[type='submit'] {
     letter-spacing: .1px;
     @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
   }
-  & button {
+}
+button {
     margin: 5px;
     border: 0;
+    padding: 0 15px;
     background-color: #E2E2E2;
     font-size: medium;
     height: 30px;
-    width: 70px;
+    min-width: 70px;
     line-height: 30px;
     letter-spacing: .5px;
+    cursor: pointer;
     @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
-}
 }
 #leftcol, #rightcol {
   position: absolute;
@@ -224,4 +229,42 @@ input[type='submit'] {
 .correct {
   background: #17BB1F !important;
   color: white;
+}
+/* RESULTS PAGE */
+.results {
+  background: #f2f2f2;
+  width: 80%;
+  margin-left: 10%;
+  height: auto;
+  overflow: auto;
+  &>* {
+    margin: 0;
+    padding: 20px;
+  }
+  & .heading {
+    text-transform: uppercase;
+    padding: 25px;
+    border-bottom: 1px #000 dashed;
+    border-top: 1px #000 dashed;
+  }
+  & .percent-score {
+    font-size: 50pt;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  & .score {
+    font-size: x-large;
+    padding-top: 0;
+  }
+  & .time {
+    font-size: large;
+    border-bottom: 1px #000 dashed;
+    padding-bottom: 5px;
+  }
+  & a {
+    display: inline-block;
+  }
+  & .buttons {
+    border-bottom: 1px #000 dashed;
+  }
 }

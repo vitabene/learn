@@ -44,23 +44,9 @@ module.exports = function(grunt) {
 			options: {
 				livereload: true,
 			},
-			scripts: {
-				files: ['js/*.js'],
+			all: {
+				files: ['js/*.js', '*.php', 'css/*.scss'],
 				tasks: ['default'],
-				options: {
-					spawn: false,
-				}
-			},
-			php: {
-				files: ['./*.php'],
-				tasks: ['default'],
-				options: {
-					spawn: false,
-				}
-			},
-			css: {
-				files: ['css/*.scss'],
-				tasks: ['sass'],
 				options: {
 					spawn: false,
 				}

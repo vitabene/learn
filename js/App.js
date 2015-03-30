@@ -3,10 +3,11 @@ var App = {
 	pairsGenerated: 5,
 	pairsInUse: [],
 	indexesUsed: [],
+	indexesLeft: 0,
 	lineNodes: [],
+	lineParent: {},
 	mistakes: [],
 	correct: 0,
-	lineParent: {},
 	startButton: {},
 	checkButton: {},
 	message: {},
@@ -31,6 +32,7 @@ App.populateDatabase = function(setName){
 					var keyValueArray = Array(key).concat(jsonObject[key]);
 					App.pairDatabase.push(keyValueArray);
 				});
+				App.indexesLeft = App.pairDatabase.length;
 			}
 		}
 		xmlhttp.open("GET","getpairs.php?id=" + setName, true);
@@ -40,56 +42,42 @@ App.populateDatabase = function(setName){
 }
 
 App.generatePairs = function() {
-	var numberOfPairs = App.pairsGenerated, pairsChosen = [], valueNodes = [], indexesLeft = App.pairDatabase.length - App.indexesUsed.length, associativePairArray = [];
+	var numberOfPairs = App.pairsGenerated, pairsChosen = [], valueNodes = [], associativePairArray = [];
 
+	if (App.indexesLeft < numberOfPairs) {
+		numberOfPairs = App.indexesLeft;
+	}
+	App.indexesLeft -= numberOfPairs;
 	App.refresh();
 	App.lineParent.removeChild(App.checkButton);
 
 	//if there is less pairs than is to be generated
 	if (App.pairDatabase.length < App.pairsGenerated) App.pairsGenerated = App.pairDatabase.length;
 
-	if (indexesLeft < numberOfPairs) {
-		numberOfPairs = indexesLeft;
+	indexesFromDB = randomIndexesFromDB(numberOfPairs, App.pairDatabase, App.indexesUsed);
+	App.pairsInUse = pairArrayFromIndexes(indexesFromDB, App.pairDatabase);
+
+	for (var i = 0; i < App.pairsInUse.length; i++) {
+		valueNodes.push(App.pairsInUse[i].valueNode);
 	}
-	if (indexesLeft === 0) {
-			//gui stuff
-			var endTime = new Date().getTime();
 
-			//the -1 because of 1 second delay between checking and generating
-			App.time = Math.floor((endTime - App.time)/1000) - 1;
-
-			//redirect to results.php
-			App.sendDataTo("results.php", 'post');
-			// console.log(App.getScore());
-
-			// App.indexesUsed = [];
-
-		}
-
-		indexesFromDB = randomIndexesFromDB(numberOfPairs, App.pairDatabase, App.indexesUsed);
-		App.pairsInUse = pairArrayFromIndexes(indexesFromDB, App.pairDatabase);
-
-		for (var i = 0; i < App.pairsInUse.length; i++) {
-			valueNodes.push(App.pairsInUse[i].valueNode);
-		}
-
-		valueNodes = shuffleArray(valueNodes);
-		var lastYCoord = 0, firstYCoord = 0;
-		for (i = 0; i < numberOfPairs; i++) {
-			var key = App.pairsInUse[i].keyNode, value = valueNodes[i];
-			key.id = "k" + i;
-			associativePairArray[key.id] = App.pairsInUse[i];
-			byId("leftcol").appendChild(key);
-			byId("rightcol").appendChild(value);
-			if (i === 0) firstYCoord = value.getBoundingClientRect().top;
-			lastYCoord = value.getBoundingClientRect().bottom;
-		}
-		App.pairsInUse = associativePairArray;
-		App.lineParent.style.height = (20 + lastYCoord) + "px";
-		App.checkButton.style.marginTop = (lastYCoord - firstYCoord + 50) + "px";
-		App.lineParent.appendChild(App.checkButton);
-		return true;
+	valueNodes = shuffleArray(valueNodes);
+	var lastYCoord = 0, firstYCoord = 0;
+	for (i = 0; i < numberOfPairs; i++) {
+		var key = App.pairsInUse[i].keyNode, value = valueNodes[i];
+		key.id = "k" + i;
+		associativePairArray[key.id] = App.pairsInUse[i];
+		byId("leftcol").appendChild(key);
+		byId("rightcol").appendChild(value);
+		if (i === 0) firstYCoord = value.getBoundingClientRect().top;
+		lastYCoord = value.getBoundingClientRect().bottom;
 	}
+	App.pairsInUse = associativePairArray;
+	App.lineParent.style.height = (20 + lastYCoord) + "px";
+	App.checkButton.style.marginTop = (lastYCoord - firstYCoord + 50) + "px";
+	App.lineParent.appendChild(App.checkButton);
+	return true;
+}
 
 App.notify = function(messageText) {
 	App.message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
@@ -172,9 +160,9 @@ App.sendDataTo = function(url, method){
 	inputs[2].value = App.time;
 
 	//cannot pass Pair object, need to add toString() method returning pre-JSON Object to Pair class
-	inputs[3].name = 'json_mistakes';
-	console.log(App.mistakes);
-	inputs[3].value = App.mistakes;
+	// inputs[3].name = 'json_mistakes';
+	// console.log(App.mistakes);
+	// inputs[3].value = App.mistakes;
 
 	inputs[3].name = 'set_id';
 	inputs[3].value = App.lineParent.dataset.set;
@@ -210,7 +198,13 @@ App.checkPairs = function() {
 
 		//if no mistakes made, generate pairs in 1 second
 		if (currentMistakes.length === 0) {
-			setTimeout(function() {App.generatePairs()}, 1000);
+			setTimeout(function() {
+				if (App.indexesLeft === 0) {
+					App.time = Math.floor((new Date().getTime() - App.time)/1000);
+					App.sendDataTo("results.php", 'post');
+				}
+				App.generatePairs();
+			}, 1000);
 		} else {
 			setTimeout(function() {
 				clearClass("mistake");
