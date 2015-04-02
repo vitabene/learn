@@ -1,97 +1,7 @@
-@mixin box-shadow($x, $y, $blur, $spread) {
-  box-shadow:         $x $y $blur $spread rgba(0,0,0,0.75);
-}
-@mixin rotate($deg) {
-  transform: rotate($deg);
-}
-@mixin plus-icon($width, $lineWidth, $color, $borderRadius){
-    margin: ($width - $lineWidth)/2 $lineWidth/2;
-    display: inline-block;
-    position: relative;
-    background: $color;
-    height: $lineWidth;
-    width: $width - $lineWidth;
-    border-radius: $borderRadius;
-    @include box-shadow(0.5px, 0.5px, 2px, .5px);
-  &:after {
-    position: absolute;
-    background: $color;
-    content: "";
-    height: $width - $lineWidth;
-    width: $lineWidth;
-    border-radius: $borderRadius;
-    left: ($width/2) - $lineWidth;
-    top: -($width/2) + $lineWidth;
-    @include box-shadow(0.5px, 0.5px, 2px, .5px);
-  }
-}
+@import 'mixins';
+@import 'general';
+@import 'app';
 
-body, nav, ul, table, div, img, a {
-  margin: 0;
-  padding: 0;
-}
-body {
-  background: url('../assets/skulls.png');
-  font-family: 'Raleway','Open Sans', sans-serif;
-  position: absolute;
-  width: 100%;
-}
-ul {
-  margin: auto;
-  list-style: none;
-}
-a {
-  text-decoration: none;
-  color: #000;
-}
-nav {
-  position: fixed;
-  width: 100%;
-  height: 40px;
-  background: url('../assets/noisy_net.png') #222222;
-  z-index: 1000;
-  @include box-shadow(0px, 1px, 10px, .2px);
-  & ul {
-    position: absolute;
-    display: inline-block;
-    width: 50%;
-    margin-left: 15%;
-    font-size: 1.1em;
-    & li {
-      line-height: 40px;
-      display: inline-block;
-      padding: 0 40px;
-      color: #DEFFFE;
-    }
-    & a.logo {
-      color: #DEFFFE;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-      font-family: 'Raleway';
-      text-shadow: .3px .3px .3px #fff;
-      font-size: x-large;
-    }
-    & a li:hover {
-      color: #A3D9FF;
-      text-shadow: .5px .5px .5px #000;
-    }
-  }
-  & .settings {
-    position: static;
-    float: right;
-    padding-top: 5px;
-    margin-right: 24%;
-    height: 30px;
-    width: 30px;
-    & img {
-      width: 100%;
-      height: 100%;
-    }
-    & a {
-      display: inline-block;
-    }
-  }
-}
 .plus {
   @include plus-icon(40px, 5px, #121E2F, 2px)
 }
@@ -113,158 +23,51 @@ nav {
 }
 .set-tile:hover, .plus:hover, button:hover {
   position: relative;
-  top: 2px;
-}
-.heading {
-  padding: 30px;
-  letter-spacing: 3px;
-  word-spacing: 8px;
-  text-shadow: .3px .3px .3px #000;
-  a {
-    text-decoration: underline;
-  }
-}
-
-
-input[type='submit'] {
-  border: 0;
-    background-color: #E2E2E2;
-    height: 20px;
-    min-width: 70px;
-    line-height: 20px;
-    letter-spacing: .5px;
-    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
-}
-#pair-list {
-  position: relative;
-  overflow: hidden;
-  height: auto;
-  margin-top: 150px;
-  & li {
-    background: white;
-    padding: 3px;
-    margin: 8px 35px;
-    width: 50%;
-    font-size: medium;
-    cursor: pointer;
-    letter-spacing: .1px;
-    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
-  }
-}
-button {
-    margin: 5px;
-    border: 0;
-    padding: 0 15px;
-    background-color: #E2E2E2;
-    font-size: medium;
-    height: 30px;
-    min-width: 70px;
-    line-height: 30px;
-    letter-spacing: .5px;
-    cursor: pointer;
-    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
-}
-#leftcol, #rightcol {
-  position: absolute;
-  float: left;
-  width: 50%;
-}
-#rightcol {
-  float: right;
-  margin-left: 50%;
-}
-#leftcol li {
-  float: right;
-}
-#rightcol li {
-  float: left;
-}
-.line {
-  position: absolute;
-  background-color: #5E88D0;
-  height: 2px;
-  display: block;
-  border-radius: 1px;
-  z-index: -1;
-  @include box-shadow(0.2px, 0.2px, 0.2px, 0.2px);
-}
-.line-correct {
-  position: absolute;
-  background-color: #17BB1F;
-  height: 2px;
-  display: block;
-  border-radius: 1px;
-}
-#message {
-  position: absolute;
-  width: 80%;
-  margin-left: 10%;
-  margin-top: -50px;
-  padding: 5px;
-  height: 35px;
-  line-height: 35px;
-  background: lighten(#A4D9C0, 20%);
-  color: #000;
-  font-size: large;
-  @include box-shadow(0px, 0px, 1px, 1px);
-}
-#remove-message {
-  float: right;
-  cursor: pointer;
-  font-size: large;
-  line-height: 35px;
-  margin-right: 10px;
-}
-.selected {
-  position: relative;
-  bottom: 3px;
-  background: lighten(#668CD6, 20%) !important;
-  color: darken(#FFFC75, 90%);
-  @include box-shadow(0px, 0px, 1px, 1px);
-}
-.mistake {
-  background: #D92424 !important;
-  color: white;
-}
-.correct {
-  background: #17BB1F !important;
-  color: white;
+  top: 1px;
 }
 /* RESULTS PAGE */
-.results {
-  background: #f2f2f2;
-  width: 80%;
-  margin-left: 10%;
-  height: auto;
-  overflow: auto;
-  &>* {
-    margin: 0;
-    padding: 20px;
-  }
-  & .heading {
-    text-transform: uppercase;
-    padding: 25px;
-    border-bottom: 1px #000 dashed;
-    border-top: 1px #000 dashed;
-  }
+.main.results {
   & .percent-score {
     font-size: 50pt;
     padding-top: 0;
     padding-bottom: 0;
+    margin-bottom: 0;
   }
   & .score {
     font-size: x-large;
     padding-top: 0;
+    margin-top: 0;
   }
   & .time {
     font-size: large;
-    border-bottom: 1px #000 dashed;
-    padding-bottom: 5px;
+    letter-spacing: 1.5px;
+    border-bottom: 5px darken(#f2f2f2, 10%) dashed;
+    padding-bottom: 15px;
   }
-  & a {
-    display: inline-block;
+}
+/* PRACTISE PAGE */
+
+/* VIEW SETS PAGE */
+.main.view {
+  background: #f2f2f2;
+  & table {
+    width: 90%;
+    margin: 5%;
+    & .value {
+      text-align: left;
+      background: #f8f;
+    }
   }
-  & .buttons {
-    border-bottom: 1px #000 dashed;
+  .plus {
+    @include plus-icon(15px, 2px, #121E2F, 2px);
+    margin-left: 80%;
+    @include rotate(45deg);
   }
+}
+table, th, td {
+    border: 2px darken(#f2f2f2, 10%) dashed;
+    border-collapse: collapse;
+}
+th,td {
+    padding: 10px;
 }

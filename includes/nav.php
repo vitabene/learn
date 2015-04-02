@@ -1,6 +1,6 @@
 <ul>
 	<a href="index.php" class="logo"><li>learn</li></a>
-	<a href="upload.php"><li>view set</li></a>
+	<a href="view.php"><li>view</li></a>
 </ul>
 <div class="settings">
 	<a href="settings.php">

@@ -1,5 +1,6 @@
 <?php
 require './includes/init.php';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,7 +14,7 @@ require './includes/init.php';
         <?php require 'includes/nav.php'; ?>
     </nav>
 
-    <main class="content">
+    <main class="main">
         <div class="heading">
             <h1>choose a set to practise</h1>
         </div>
@@ -27,9 +28,9 @@ require './includes/init.php';
         echo "</ul>";
 
         ?>
-        <div class="heading">
+        <div class="subheading">
             <h2>or create your own</h2>
-            <a href="upload.php"><span class="plus"></span></a>
+            <a href="view.php"><span class="plus"></span></a>
         </div>
     </main>
 

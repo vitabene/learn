@@ -5,9 +5,6 @@ function Pair(keyData, valueData) {
 		liNode.innerHTML = nodeData;
 		return liNode;
 	}
-	this.setValue = function(valueToAssign){
-		this.assignedValue = valueToAssign;
-	}
 	this.check = function() {
 		if (this.valueNode.innerHTML === this.assignedValue) {
 			this.markCorrect();
@@ -16,13 +13,6 @@ function Pair(keyData, valueData) {
 		}
 		else this.highlightMistake();
 		return false;
-	}
-	this.drawLine = function(parent, newLine) {
-		this.line = newLine;
-		parent.appendChild(this.line);
-	}
-	this.removeLine = function() {
-		this.line.parentNode.removeChild(this.line);
 	}
 	this.moveUp = function() {
 		var keyParent = this.keyNode.parentNode, valueParent = this.valueNode.parentNode;
@@ -42,5 +32,5 @@ function Pair(keyData, valueData) {
 	this.keyNode = this.createLiNode(keyData);
 	this.valueNode = this.createLiNode(valueData);
 	this.assignedValue;
-	this.line;
+	this.mistakes;
 }

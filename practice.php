@@ -16,9 +16,9 @@ if (isset($_GET['id']) && Db::query("SELECT * FROM set_names WHERE id=?", $_GET[
             <?php require 'includes/nav.php'; ?>
         </nav>
 
-        <main class="content">
+        <main class="main practice">
             <div class="heading">
-            <h2>press start when you are ready</h2>
+            <h2>Are you ready?</h2>
             </div>
             <div id="pair-list" <?php echo "data-set='" . urlencode($_GET['id']) . "' "; ?>>
                 <ul id="leftcol"></ul>

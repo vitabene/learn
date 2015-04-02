@@ -40,6 +40,12 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
+		// concat_css: {
+		// 	options: {},
+		// 	files: {
+		// 		'dest/compiled.css': ['src/styles/componentA.css', 'src/styles/componentB.css'],
+		// 	},
+		// },
 		watch: {
 			options: {
 				livereload: true,

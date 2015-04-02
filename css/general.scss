@@ -1,0 +1,145 @@
+// resets
+body, nav, ul, table, div, img, a {
+	margin: 0;
+	padding: 0;
+}
+ul {
+	margin: auto;
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	color: #000;
+}
+//styles
+body {
+	background: url('../assets/skulls.png');
+	font-family: 'Raleway','Open Sans', sans-serif;
+	position: absolute;
+	width: 100%;
+}
+.heading {
+	padding: 30px;
+	letter-spacing: 3px;
+	word-spacing: 8px;
+	text-shadow: 0px 0px 3px #000;
+	color: #C61716;
+	text-transform: uppercase;
+	border-bottom: 5px darken(#f2f2f2, 10%) dashed;
+}
+.subheading {
+	padding: 30px;
+	letter-spacing: 3px;
+	word-spacing: 8px;
+	text-shadow: 0px 0px 3px #000;
+	color: #C61716;
+	border-top: 5px darken(#f2f2f2, 10%) dashed;
+	text-transform: lowercase;
+}
+.main {
+  // background: #f2f2f2;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 80px;
+  height: auto;
+  overflow: hidden;
+  text-align: center;
+  // @include box-shadow(0, 0, 10px, .5px);
+  & div {
+  	margin: 0;
+  	padding: 20px;
+  }
+  & a {
+  	display: inline-block;
+  }
+}
+nav {
+	position: fixed;
+	width: 100%;
+	height: 40px;
+	background: url('../assets/noisy_net.png') #222222;
+	z-index: 1000;
+	@include box-shadow(0px, 1px, 10px, .2px);
+	& ul {
+		position: absolute;
+		display: inline-block;
+		width: 50%;
+		margin-left: 15%;
+		font-size: 1.1em;
+		& li {
+			line-height: 40px;
+			display: inline-block;
+			padding: 0 40px;
+			color: #DEFFFE;
+		}
+		& a.logo {
+			color: #DEFFFE;
+			letter-spacing: 5px;
+			text-transform: uppercase;
+			font-family: 'Raleway';
+			text-shadow: .3px .3px .3px #fff;
+			font-size: x-large;
+		}
+		& a li:hover {
+			color: #A3D9FF;
+			text-shadow: .5px .5px .5px #000;
+		}
+	}
+	& .settings {
+		position: static;
+		float: right;
+		padding-top: 5px;
+		margin-right: 24%;
+		height: 30px;
+		width: 30px;
+		& img {
+			width: 100%;
+			height: 100%;
+		}
+		& a {
+			display: inline-block;
+		}
+	}
+}
+input[type='submit'] {
+	border: 0;
+	background-color: #E2E2E2;
+	height: 20px;
+	min-width: 70px;
+	line-height: 20px;
+	letter-spacing: .5px;
+	@include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
+}
+button {
+	margin: 5px;
+	border: 0;
+	padding: 0 15px;
+	background-color: lighten(#99FFB2, 5%);
+	font-size: medium;
+	height: 30px;
+	min-width: 70px;
+	line-height: 30px;
+	letter-spacing: .5px;
+	cursor: pointer;
+	border-radius: 5%;
+	letter-spacing: 1px;
+	@include box-shadow(0, 0, 2px, .5px);
+}
+#message {
+	position: absolute;
+	width: 80%;
+	padding: 5px;
+	height: 35px;
+	line-height: 35px;
+	background: lighten(#EE6C6C, 30%);
+	color: #000;
+	font-size: large;
+	@include box-shadow(0, 0, 10px, .5px);
+}
+#remove-message {
+	float: right;
+	cursor: pointer;
+	font-size: large;
+	line-height: 35px;
+	margin-right: 10px;
+}

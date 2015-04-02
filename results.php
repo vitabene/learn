@@ -31,8 +31,7 @@ if (isset($_POST['num_of_mistakes']) && $_POST['num_of_pairs'] && $_POST['time']
         <?php require 'includes/nav.php'; ?>
     </nav>
 
-    <main class="content">
-		<div class="results">
+    <main class="main results">
 			<div class="heading">
 				<h1>your results</h1>
 			</div>
@@ -45,7 +44,7 @@ if (isset($_POST['num_of_mistakes']) && $_POST['num_of_pairs'] && $_POST['time']
 				<a <?php echo "href='practice.php?id=" . $set_id . "'"; ?>><button class="practise-again">practise again</button></a>
 			</div>
 			<!-- per-set progress chart -->
-		</div>
+
     </main>
 
 </body>

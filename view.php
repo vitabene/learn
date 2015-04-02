@@ -15,6 +15,7 @@ if ($_POST) {
         Db::insert($table_name, $data);
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,9 +29,39 @@ if ($_POST) {
         <?php require 'includes/nav.php'; ?>
     </nav>
 
-    <main class="content">
-        <div id="pair-list">
-            <form action="" method="post">
+    <main class="main view">
+        <?php
+        if (!isset($_GET['id'])) {
+            echo "<div class='heading'><h1>choose a set to view</h1></div>";
+            echo "<ul>";
+            $set_names = Db::queryAll("SELECT * FROM set_names");
+            foreach ($set_names as $set) {
+                echo "<a class='set-tile' href='view.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+            }
+            echo "</ul>";
+        } else {
+            $set_id = $_GET['id'];
+            $set = Db::queryOne("SELECT * FROM set_names WHERE id=?", $set_id);
+            $pairs = Db::queryAll("SELECT * FROM key_to_values WHERE set_id=?", $set_id);
+
+            echo "<div class='heading'><h1>" . $set['set_name'] . "</h1></div>";
+
+
+            ?>
+            <!-- HERE GOES THE VIEW STUFF -->
+            <!-- now dummy data -->
+            <table>
+                <tr>
+                    <th>Key</th>
+                    <th>Values</th>
+                </tr>
+                <tr>
+                    <td class="key"><span data-id="">Master<span></td>
+                    <td class="value"><span data-key="value-index">Elodin<span><a><span class="plus"></span></a></td>
+                </tr>
+            </table>
+        <?php } ?>
+           <!--  <form action="" method="post">
                 <label for="new_set">New set name:</label>
                 <input type="text" name="new_set">
                 <input type="submit" value="submit new set">
@@ -52,8 +83,7 @@ if ($_POST) {
                 <input type="text" name="values">
                 <input type="submit" value="submit">
 
-            </form>
-        </div>
-    </main>
-</body>
-</html>
+            </form> -->
+        </main>
+    </body>
+    </html>

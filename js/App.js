@@ -40,7 +40,6 @@ App.populateDatabase = function(setName){
 	}
 	return true;
 }
-
 App.generatePairs = function() {
 	var numberOfPairs = App.pairsGenerated, pairsChosen = [], valueNodes = [], associativePairArray = [];
 
@@ -78,7 +77,6 @@ App.generatePairs = function() {
 	App.lineParent.appendChild(App.checkButton);
 	return true;
 }
-
 App.notify = function(messageText) {
 	App.message = document.createElement('div'), text = document.createElement('span'), removeButton = document.createElement('span');
 
@@ -122,14 +120,13 @@ App.connect = function(button) {
 	//both nodes defined
 	if (!!App.lineNodes["key"] && !!App.lineNodes["value"]) {
 		var pair = App.pairsInUse[App.lineNodes["key"].id];
-		pair.setValue(App.lineNodes["value"].innerHTML);
+		pair.assignedValue = App.lineNodes["value"].innerHTML;
 		App.lineParent.insertBefore(new Line(App.lineNodes["key"], App.lineNodes["value"], App.lineParent), App.checkButton);
 
 		setTimeout(function() {clearClass("selected")}, 300);
 		App.lineNodes = [];
 	}
 	return true;
-
 }
 App.refresh = function() {
 	App.lineNodes = [];
@@ -168,8 +165,8 @@ App.sendDataTo = function(url, method){
 	for (var i = inputs.length - 1; i >= 0; i--) {
 		form.appendChild(inputs[i]);
 	}
-	form.submit();
 	// console.log("form submitted");
+	form.submit();
 }
 App.checkPairs = function() {
 	var lines = byClassName("line");
@@ -192,7 +189,13 @@ App.checkPairs = function() {
 		//recording mistakes
 		if (App.mistakes.length === 0) App.mistakes = currentMistakes.slice();
 		else Object.keys(currentMistakes).map(function(k){
-			if (App.mistakes.indexOf(currentMistakes[k]) === -1) App.mistakes.push(currentMistakes[k]);
+
+			// TO REFACTOR ASAP
+			if (App.mistakes.indexOf(currentMistakes[k]) === -1) {
+				App.mistakes.push(currentMistakes[k]);
+			}
+
+
 		});
 
 		//if no mistakes made, generate pairs in 1 second
@@ -229,6 +232,7 @@ App.getJSONMistakes = function() {
 		tempArr[2] = pair.assignedValue;
 		tempArr = tempArr.join();
 		console.log(tempArr);
+
 		//assigned value is correct by rounds, need to address
 		mistakesJSONObject[i] = tempArr;
 	}
@@ -254,15 +258,15 @@ App.init = function(){
 	App.startButton.innerHTML = "start";
 	App.checkButton.innerHTML = "check";
 	App.lineParent.appendChild(App.startButton);
-	App.lineParent.appendChild(App.checkButton);
 
 	App.lineParent.addEventListener("click", function(e) {
 		if (e.target) {
 			if (e.target.nodeName === "LI") App.connect(e.target);
 			else if (e.target === App.startButton) {
-				App.generatePairs();
 				removeNodesWithClass("heading");
 				App.startButton.style.display = "none";
+				App.lineParent.appendChild(App.checkButton);
+				App.generatePairs();
 				App.time = new Date().getTime();
 			} else if (e.target === App.checkButton) {
 				App.checkPairs();
