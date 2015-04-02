@@ -13,7 +13,7 @@ require './includes/init.php';
         <?php require 'includes/nav.php'; ?>
     </nav>
 
-    <main class="content">
+    <main class="main">
 
 
     </main>

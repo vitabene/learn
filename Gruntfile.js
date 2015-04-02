@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				separator: ''
 			},
 			target: {
-				src: ['js/helpers.js', 'js/Line.js', 'js/Pair.js', 'js/App.js'],
+				src: ['js/helpers.js', 'js/Pair.js', 'js/App.js'],
 				dest: 'js/build/application.js'
 			}
 		},

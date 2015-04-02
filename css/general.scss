@@ -37,7 +37,7 @@ body {
 	text-transform: lowercase;
 }
 .main {
-  // background: #f2f2f2;
+  background:rgba(255,255,255,0.6);
   width: 80%;
   margin-left: 10%;
   margin-top: 80px;
@@ -102,13 +102,17 @@ nav {
 	}
 }
 input[type='submit'] {
-	border: 0;
+	border:0;
 	background-color: #E2E2E2;
 	height: 20px;
 	min-width: 70px;
 	line-height: 20px;
 	letter-spacing: .5px;
 	@include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
+}
+input[type='text'] {
+    border: 1px darken(#fff, 50%) dotted;
+    border-radius: 3px;
 }
 button {
 	margin: 5px;
@@ -128,13 +132,12 @@ button {
 #message {
 	position: absolute;
 	width: 80%;
-	padding: 5px;
-	height: 35px;
+	@include cell(#EE6C6C);
+	display: block;
 	line-height: 35px;
-	background: lighten(#EE6C6C, 30%);
-	color: #000;
 	font-size: large;
-	@include box-shadow(0, 0, 10px, .5px);
+	padding: 0px;
+	margin-top: -35px;
 }
 #remove-message {
 	float: right;

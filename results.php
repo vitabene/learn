@@ -40,7 +40,7 @@ if (isset($_POST['num_of_mistakes']) && $_POST['num_of_pairs'] && $_POST['time']
 			<p class="time"><?php echo "your time: " . $time; ?></p>
 			<!-- table with mistakes -->
 			<div class="buttons">
-				<a href="upload.php"><button class="view-set">view set</button></a>
+				<a <?php echo "href='set.php?view_id=" . $set_id . "'"; ?>><button class="view-set">view set</button></a>
 				<a <?php echo "href='practice.php?id=" . $set_id . "'"; ?>><button class="practise-again">practise again</button></a>
 			</div>
 			<!-- per-set progress chart -->

@@ -121,7 +121,7 @@ App.connect = function(button) {
 	if (!!App.lineNodes["key"] && !!App.lineNodes["value"]) {
 		var pair = App.pairsInUse[App.lineNodes["key"].id];
 		pair.assignedValue = App.lineNodes["value"].innerHTML;
-		App.lineParent.insertBefore(new Line(App.lineNodes["key"], App.lineNodes["value"], App.lineParent), App.checkButton);
+		App.lineParent.insertBefore(App.createLine(), App.checkButton);
 
 		setTimeout(function() {clearClass("selected")}, 300);
 		App.lineNodes = [];
@@ -167,6 +167,35 @@ App.sendDataTo = function(url, method){
 	}
 	// console.log("form submitted");
 	form.submit();
+}
+App.createLine = function() {
+	var keyNode = App.lineNodes["key"], valueNode = App.lineNodes["value"], boundingRects = [keyNode.getBoundingClientRect(), valueNode.getBoundingClientRect(), App.lineParent.getBoundingClientRect()],
+	nodeHeight = boundingRects[0].bottom - boundingRects[0].top,
+	beginning =  {x: boundingRects[0].right, y: boundingRects[0].top + (nodeHeight/2)},
+	end = { x: boundingRects[1].left, y: boundingRects[1].top + (nodeHeight/2)},
+	rectangle = {x: end.x - beginning.x, y: end.y - beginning.y},
+	length = Math.sqrt(Math.pow(rectangle.x, 2) + Math.pow(rectangle.y, 2)),
+	angle = Math.asin(rectangle.y/length) * (180/Math.PI),
+	position = {x: beginning.x + (rectangle.x - length)/2 - boundingRects[2].left, y: beginning.y + (rectangle.y/2) - boundingRects[2].top};
+
+	var lineElement = document.createElement("span");
+	lineElement.className = "line";
+
+	var addStyles = function(line) {
+		//the -1 and +1 are there just for aesthetic reason
+		line.style.width = round(length - 1, 1) + "px";
+		line.style.marginTop = round(position.y, 1) + "px";
+		line.style.marginLeft = round(position.x + 1, 1) + "px";
+		if (angle !== 0) line.style.webkitTransform = line.style.MozTransform = line.style.msTransform = line.style.OTransform = line.style.transform = "rotate(" + round(angle, 1) + "deg)";
+	}
+
+	addStyles(lineElement);
+
+	var keyId = keyNode.id;
+	lineElement.id = "l" + keyId.substring(keyId.length - 1);
+	valueNode.id = "v" + keyId.substring(keyId.length - 1);
+
+	return lineElement;
 }
 App.checkPairs = function() {
 	var lines = byClassName("line");

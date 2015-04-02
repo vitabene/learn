@@ -1,15 +1,15 @@
 <?php
 require './includes/init.php';
 
-if ($_POST) {
-    if ($_POST['key'] && $_POST['values'] && $_POST['set_id']) {
+if (!empty($_POST)) {
+    if (isset($_POST['key']) && isset($_POST['values']) && isset($_POST['set_id'])) {
         $table_name = 'key_to_values';
         $values = explode(";", $_POST['values']);
         $values = array_map('trim', $values);
         $data = array('set_id' => $_POST['set_id'], 'key' => $_POST['key'], 'values' => json_encode($values));
         Db::insert($table_name, $data);
     }
-    if ($_POST['new_set']) {
+    elseif (isset($_POST['new_set'])) {
         $table_name = 'set_names';
         $data = array('set_name' => $_POST['new_set']);
         Db::insert($table_name, $data);
@@ -30,17 +30,24 @@ if ($_POST) {
     </nav>
 
     <main class="main view">
+
         <?php
-        if (!isset($_GET['id'])) {
-            echo "<div class='heading'><h1>choose a set to view</h1></div>";
+        //if nothing's set in get
+        if (empty($_GET)) {
+
+            echo "<div class='heading'><h1>view</h1></div>";
             echo "<ul>";
             $set_names = Db::queryAll("SELECT * FROM set_names");
             foreach ($set_names as $set) {
-                echo "<a class='set-tile' href='view.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+                echo "<a class='set-tile' href='set.php?view_id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
             }
             echo "</ul>";
-        } else {
-            $set_id = $_GET['id'];
+            echo '<div class="subheading">
+            <h2>create your own set</h2>
+            <a href="set.php?add_set"><span class="plus-set"></span></a>
+            </div>';
+        } elseif (isset($_GET['view_id'])){
+            $set_id = $_GET['view_id'];
             $set = Db::queryOne("SELECT * FROM set_names WHERE id=?", $set_id);
             $pairs = Db::queryAll("SELECT * FROM key_to_values WHERE set_id=?", $set_id);
 
@@ -49,22 +56,48 @@ if ($_POST) {
 
             ?>
             <!-- HERE GOES THE VIEW STUFF -->
-            <!-- now dummy data -->
+            <!-- now dummy data for view action-->
             <table>
                 <tr>
                     <th>Key</th>
                     <th>Values</th>
                 </tr>
                 <tr>
-                    <td class="key"><span data-id="">Master<span></td>
-                    <td class="value"><span data-key="value-index">Elodin<span><a><span class="plus"></span></a></td>
+                    <td class="key"><span class="key-cell">Master<span></td>
+                    <td class="value">
+                        <span class="value-cell">Elodin</span>
+                        <span class="value-cell">Elodin</span>
+                        <span class="add-value" data-keyId="x"></span>
+                    </td>
+                </tr>
+                <!-- ... and then the last cell -->
+                <tr>
+                    <td class="key">
+                        <a id="addKey">
+                            <span class="add-key"></span>
+                            <span class="add-key-text">add key</span>
+                        </a>
+                    </td>
+                    <td class="value"></td>
                 </tr>
             </table>
-        <?php } ?>
+        <?php
+        } elseif (isset($_GET['add_set'])) { ?>
+            <div class="heading">
+                <h2>enter set name</h2>
+            </div>
+            <form class="add-set" action="" method="post">
+
+            <input type="text" name="new_set">
+            <input type="submit" value="submit">
+
+            </form>
+        <?php
+        }
+
+        ?>
+
            <!--  <form action="" method="post">
-                <label for="new_set">New set name:</label>
-                <input type="text" name="new_set">
-                <input type="submit" value="submit new set">
 
                 <br>
                 <br>

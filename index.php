@@ -16,7 +16,7 @@ require './includes/init.php';
 
     <main class="main">
         <div class="heading">
-            <h1>choose a set to practise</h1>
+            <h1>practise</h1>
         </div>
         <?php
 
@@ -29,8 +29,8 @@ require './includes/init.php';
 
         ?>
         <div class="subheading">
-            <h2>or create your own</h2>
-            <a href="view.php"><span class="plus"></span></a>
+            <h2>create your own set</h2>
+            <a href="set.php?add_set"><span class="plus-set"></span></a>
         </div>
     </main>
 
