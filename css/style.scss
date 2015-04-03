@@ -11,14 +11,14 @@
   background: lighten(#D0E9F7, 6%);
   @include box-shadow(0.5px, 0.5px, 4px, .5px);
 }
-.set-tile:hover, .plus:hover, button:hover, .add-value:hover, .plus-set:hover, input[type='submit']:hover {
+.set-tile:hover, .plus:hover, button:hover, .add-value:hover, .plus-set:hover, input[type='submit']:hover, .add-key:hover {
   position: relative;
   top: 1px;
 }
 .plus-set {
   display: inline-block;
   @include plus-icon(40px, 5px, #00a154, 5px);
-    @include box-shadow(0px, 0px, 1px, 0px);
+  @include box-shadow(0px, 0px, 1px, 0px);
   &::after {
     @include box-shadow(0px, 0px, 1px, 0px);
   }
@@ -50,8 +50,14 @@
   & table {
     width: 80%;
     margin: 10%;
-    & .value {
-      text-align: left;
+    table-layout: auto;
+    text-align: left;
+
+    & .value-td {
+      position: relative;
+    }
+    & .key-td {
+      position: relative;
     }
     & .value-cell {
       @include cell(#A1FFD2);
@@ -59,7 +65,31 @@
     & .key-cell {
       @include cell(#9FE2FD);
     }
+
+  & input {
+    &[type='text'] {
+      position: absolute;
+      display: inline-block;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      width: 70%;
+    }
+    &[name='key_name'] {
+      margin-left: 10%;
+    }
+    &[name='values_for_key'] {
+      width: 75%;
+    }
+    &[type='submit'] {
+      width: 10%;
+      min-width: 5%;
+      padding: 0;
+      margin: 1.5px 3px;
+      float: right;
+    }
   }
+}
   .add-value {
     @include plus-icon(20px, 3px, #00a154, 10px);
     cursor: pointer;
@@ -68,15 +98,12 @@
     margin-right: -5px;
   }
   #addKey {
+    float: left;
+    width: 20px;
     cursor: pointer;
   }
-  .add-key-text {
-    display: inline-block;
-    color: #3B3B3B;
-    margin-top: -5px;
-  }
-  .add-key {
-    display: inline-block;
+  .plus-key {
+    float: left;
     @include plus-icon(20px, 3px, #00a154, 5px);
   }
   .add-set {
@@ -84,9 +111,9 @@
   }
 }
 table, th, td {
-    border: 2px darken(#f2f2f2, 10%) dashed;
-    border-collapse: collapse;
+  border: 2px darken(#f2f2f2, 10%) dashed;
+  border-collapse: collapse;
 }
 th,td {
-    padding: 10px;
+  padding: 10px;
 }

@@ -6,4 +6,5 @@ try {
 } catch (Exception $e) {
 	echo "database connection error";
 }
+$error = "";
 ?>

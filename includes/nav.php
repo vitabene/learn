@@ -3,7 +3,7 @@
 	<a href="set.php"><li>set</li></a>
 </ul>
 <div class="settings">
-	<a href="settings.php">
-		<img src="./assets/opt.png" alt="Settings">
-	</a>
-</div>
+<!-- 	<a href="settings.php">
+	<img src="./assets/opt.png" alt="Settings">
+</a>
+ --></div>
