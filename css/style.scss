@@ -56,6 +56,13 @@
     & .value-td {
       position: relative;
     }
+    & .field {
+      height: 60px;
+      & .value-cell {
+          margin-top: -15px;
+          margin-bottom: 3px;
+        }
+    }
     & .key-td {
       position: relative;
     }
@@ -87,6 +94,10 @@
       padding: 0;
       margin: 1.5px 3px;
       float: right;
+    }
+    &.additional-values {
+      display: block;
+      margin: 0;
     }
   }
 }

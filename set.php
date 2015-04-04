@@ -2,8 +2,9 @@
 require './includes/init.php';
 
 if (!empty($_POST)) {
+    $error = "";
     //adding new key with value
-    if (isset($_POST['key_name']) && isset($_POST['values_for_key']) && isset($_POST['set_id'])) {
+    if (!empty($_POST['key_name']) && !empty($_POST['values_for_key']) && !empty($_POST['set_id'])) {
         $table_name = 'key_to_values';
         $set_id = $_POST['set_id'];
         $key = $_POST['key_name'];
@@ -19,7 +20,7 @@ if (!empty($_POST)) {
         $key_index = array_search($key, $keys);
 
         if ($key_index === FALSE) {
-            $data = array('set_id' => $set_id, 'key' => $key, 'values' => $values);
+            $data = array('set_id' => $set_id, 'key' => $key, 'values' => json_encode($values));
             Db::insert($table_name, $data);
         } else {
             //get row
@@ -65,7 +66,6 @@ if (!empty($_POST)) {
 <head>
     <title>Learn</title>
     <?php require 'includes/head.php'; ?>
-    <script src="js/view.js"></script>
 </head>
 
 <body id="learn">
@@ -94,26 +94,25 @@ if (!empty($_POST)) {
         //default end
 
         //view set
-        elseif (isset($_GET['view_id'])) {
+        elseif (!empty($_GET['view_id'])) {
             $set_id = $_GET['view_id'];
             $set = Db::queryOne("SELECT * FROM set_names WHERE id=?", $set_id);
             $pairs = Db::queryAll("SELECT * FROM key_to_values WHERE set_id=?", $set_id);
 
             echo "<div class='heading'><h1>" . $set['set_name'] . "</h1></div>";
 
-            echo "<table><thead><tr><th>Key</th><th>Values</th></tr></thead><tbody>";
+            echo "<table id='pair-table'><thead><tr><th>Key</th><th>Values</th></tr></thead><tbody>";
 
             foreach ($pairs as $keyvaluepair) {
                 $values_array = json_decode($keyvaluepair['values']);
-
                 echo '<tr>
-                    <td class="key"><span class="key-cell">' . $keyvaluepair['key'] . '<span></td>
-                    <td class="value">';
+                    <td class="key-td"><span class="key-cell">' . $keyvaluepair['key'] . '<span></td>
+                    <td class="value-td">';
                 foreach ($values_array as $value) {
                     echo '<span class="value-cell">' . $value . '</span>';
                 }
-
-                echo '<span class="add-value" data-keyId="x"></span></td></tr>';
+                // echo "<input type='text' name='values_for_key' class='additional-values'>";
+                echo '<span class="add-value" data-key="' . $keyvaluepair['key'] .'" data-set-id="' . $set_id . '"></span></td></tr>';
 
             }
 
@@ -129,9 +128,9 @@ if (!empty($_POST)) {
             </tr></tbody></table>';
 
             if (!empty($error)) {
-                $error = "";
                 //different styling needed
                 echo "<div class='heading'><h4>" . $error . "</h4></div>";
+                $error = "";
             }
         }
         //view set end
@@ -157,5 +156,6 @@ if (!empty($_POST)) {
         //add set end
         ?>
     </main>
+    <script src="js/view.js"></script>
 </body>
 </html>
