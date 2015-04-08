@@ -8,7 +8,8 @@ if (!empty($_POST)) {
         $table_name = 'key_to_values';
         $set_id = $_POST['set_id'];
         $key = $_POST['key_name'];
-        $values = array_map('trim', explode(";", $_POST['values_for_key']));
+        $values = explode(";", $_POST['values_for_key']);
+        $values = array_map('trim', $values);
 
         $existing_pairs = Db::queryAll("SELECT * FROM " . $table_name . " WHERE set_id=?", $set_id);
 

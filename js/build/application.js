@@ -20,9 +20,7 @@ function clearClass(clearClassName) {
 }
 function removeNodesWithClass(className) {
 	var parameters = document.getElementsByClassName(className);
-	while(parameters[0]) {
-		parameters[0].parentNode.removeChild(parameters[0]);
-	}​
+	while(parameters[0]) parameters[0].parentNode.removeChild(parameters[0]);
 }
 function arrayFromCollection(collection) {
 	var array = [];
@@ -272,10 +270,14 @@ App.sendDataTo = function(url, method){
 	inputs[3].name = 'set_id';
 	inputs[3].value = App.lineParent.dataset.set;
 
+	inputs[4] = document.createElement('button')
+	inputs[4].type = 'submit';
+
 	for (var i = inputs.length - 1; i >= 0; i--) {
 		form.appendChild(inputs[i]);
 	}
-	// console.log("form submitted");
+	form.style.display = 'none';
+	App.lineParent.appendChild(form);
 	form.submit();
 }
 App.createLine = function() {
@@ -395,6 +397,7 @@ App.init = function(){
 	App.populateDatabase(App.lineParent.dataset.set);
 	App.startButton = document.createElement("button"), App.checkButton = document.createElement("button");
 	App.startButton.innerHTML = "start";
+	App.startButton.style.marginBottom = '50px';
 	App.checkButton.innerHTML = "check";
 	App.lineParent.appendChild(App.startButton);
 
@@ -411,7 +414,7 @@ App.init = function(){
 				App.checkPairs();
 			}
 		}
-	});
+	}, false);
 	return true;
 }
-document.addEventListener("DOMContentLoaded", App.init());
+document.addEventListener("DOMContentLoaded", App.init);

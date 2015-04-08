@@ -20,9 +20,7 @@ function clearClass(clearClassName) {
 }
 function removeNodesWithClass(className) {
 	var parameters = document.getElementsByClassName(className);
-	while(parameters[0]) {
-		parameters[0].parentNode.removeChild(parameters[0]);
-	}​
+	while(parameters[0]) parameters[0].parentNode.removeChild(parameters[0]);
 }
 function arrayFromCollection(collection) {
 	var array = [];
