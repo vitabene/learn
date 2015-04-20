@@ -9,8 +9,11 @@ module.exports = function(grunt) {
 				banner: '/* Vitezslav Benes 2015*/\n'
 			},
 			target: {
-				src: 'js/build/application.js',
-				dest: 'js/build/application.min.js'
+				files: [{
+		          expand: true,
+		          src: 'js/build/*.js',
+		          dest: './'
+		      }]
 			}
 		},
 		jshint: {
@@ -30,6 +33,12 @@ module.exports = function(grunt) {
 				dest: 'js/build/application.js'
 			}
 		},
+		// copy: {
+		// 	main: {
+		// 	    src: 'js/order.js',
+		// 	    dest: 'js/build/',
+		// 	}
+		// },
 		imagemin: {
 			dynamic: {
 				files: [{

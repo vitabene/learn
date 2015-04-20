@@ -59,9 +59,9 @@
     & .field {
       height: 60px;
       & .value-cell {
-          margin-top: -15px;
-          margin-bottom: 3px;
-        }
+        margin-top: -15px;
+        margin-bottom: 3px;
+      }
     }
     & .key-td {
       position: relative;
@@ -73,34 +73,34 @@
       @include cell(#9FE2FD);
     }
 
-  & input {
-    &[type='text'] {
-      position: absolute;
-      display: inline-block;
-      height: 20px;
-      margin: 0;
-      padding: 0;
-      width: 70%;
-    }
-    &[name='key_name'] {
-      margin-left: 10%;
-    }
-    &[name='values_for_key'] {
-      width: 75%;
-    }
-    &[type='submit'] {
-      width: 10%;
-      min-width: 5%;
-      padding: 0;
-      margin: 1.5px 3px;
-      float: right;
-    }
-    &.additional-values {
-      display: block;
-      margin: 0;
+    & input {
+      &[type='text'] {
+        position: absolute;
+        display: inline-block;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+        width: 70%;
+      }
+      &[name='key_name'] {
+        margin-left: 10%;
+      }
+      &[name='values_for_key'] {
+        width: 75%;
+      }
+      &[type='submit'] {
+        width: 10%;
+        min-width: 5%;
+        padding: 0;
+        margin: 1.5px 3px;
+        float: right;
+      }
+      &.additional-values {
+        display: block;
+        margin: 0;
+      }
     }
   }
-}
   .add-value {
     @include plus-icon(20px, 3px, #00a154, 10px);
     cursor: pointer;
@@ -127,4 +127,16 @@ table, th, td {
 }
 th,td {
   padding: 10px;
+}
+#order {
+  ul {
+    width: 60%;
+    margin-left: 20%;
+  }
+  .cell {
+    @include cell(lighten(#9FE2FD, 10%));
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+  }
 }

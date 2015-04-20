@@ -1,5 +1,4 @@
 function Pair(keyData, valueData) {
-
 	this.keyNode = this.createLiNode(keyData);
 	this.valueNode = this.createLiNode(valueData);
 	this.assignedValue;
