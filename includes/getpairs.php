@@ -1,10 +1,10 @@
 <?php
-require './includes/init.php';
+require './init.php';
 
 $set_id = intval($_GET['id']);
 $rows = Db::queryAll('SELECT * FROM key_to_values WHERE set_id=?', $set_id);
 if (empty($rows)) {
-	header('Location: ./index.php');
+	header('Location: ../index.php');
 	exit();
 }
 $array_to_encode = [];

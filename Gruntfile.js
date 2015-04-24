@@ -9,21 +9,29 @@ module.exports = function(grunt) {
 				banner: '/* Vitezslav Benes 2015*/\n'
 			},
 			target: {
-				files: [{
-		          expand: true,
-		          src: 'js/build/*.js',
-		          dest: './'
-		      }]
+				// files: [{
+		  //         expand: true,
+		  //         src: 'js/build/*.js',
+		  //         dest: './'
+		  //         expand: true,
+		  //         src: '**/*.js',
+		  //         dest: 'js/build/',
+		  //         cwd: 'js/build/'
+		  //     }]
+		      	files: {
+		            'js/build/connect.js': 'js/build/application.js',
+		            'js/build/outline.js': 'js/build/order.js'
+		        }
 			}
 		},
-		jshint: {
-			options: {
-				jshintrc: '.jshintrc'
-			},
-			target: {
-				src: 'js/application.js'
-			}
-		},
+		// jshint: {
+		// 	options: {
+		// 		jshintrc: '.jshintrc'
+		// 	},
+		// 	target: {
+		// 		src: 'js/application.js'
+		// 	}
+		// },
 		concat: {
 			options: {
 				separator: ''
@@ -33,12 +41,12 @@ module.exports = function(grunt) {
 				dest: 'js/build/application.js'
 			}
 		},
-		// copy: {
-		// 	main: {
-		// 	    src: 'js/order.js',
-		// 	    dest: 'js/build/',
-		// 	}
-		// },
+		copy: {
+			main: {
+			    src: 'js/order.js',
+			    dest: 'js/build/order.js',
+			}
+		},
 		imagemin: {
 			dynamic: {
 				files: [{
@@ -85,5 +93,5 @@ module.exports = function(grunt) {
 
 	require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('default', ['clean', 'sass', 'concat', 'uglify']);
+	grunt.registerTask('default', ['clean', 'sass', 'concat', 'copy', 'uglify']);
 }

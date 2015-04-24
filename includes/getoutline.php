@@ -1,10 +1,10 @@
 <?php
-require './includes/init.php';
+require './init.php';
 
 $outline_id = intval($_GET['id']);
 $rows = Db::queryAll('SELECT * FROM outline_texts WHERE outline_id=?', $outline_id);
 if (empty($rows)) {
-	header('Location: ./index.php');
+	header('Location: ../index.php');
 	exit();
 }
 //do stuff

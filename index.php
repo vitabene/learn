@@ -16,17 +16,27 @@ require './includes/init.php';
 
     <main class="main">
         <div class="heading">
-            <h1>practise</h1>
+            <h1>connect</h1>
         </div>
         <?php
-
-        echo "<ul>";
+        echo "<ul class='bottom-border'>";
         $set_names = Db::queryAll("SELECT * FROM set_names");
         foreach ($set_names as $set) {
-            echo "<a class='set-tile' href='practice.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+            echo "<a class='set-tile' href='connect.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
         }
         echo "</ul>";
+        ?>
 
+        <div class="heading">
+            <h1>outline</h1>
+        </div>
+        <?php
+        echo "<ul>";
+        $set_names = Db::queryAll("SELECT * FROM outlines");
+        foreach ($set_names as $set) {
+            echo "<a class='set-tile' href='outline.php?id=" . urlencode($set['id']) ."'><li>" . $set['name'] . "</li></a>";
+        }
+        echo "</ul>";
         ?>
         <div class="subheading">
             <h2>create your own set</h2>

@@ -23,6 +23,9 @@
     @include box-shadow(0px, 0px, 1px, 0px);
   }
 }
+.bottom-border {
+    border-bottom: 5px darken(#f2f2f2, 10%) dashed;
+}
 /* RESULTS PAGE */
 .main.results {
   & .percent-score {
@@ -139,4 +142,7 @@ th,td {
     margin: 10px 0;
     cursor: pointer;
   }
+}
+.add-outline, .add-outline-text {
+  padding: 30px 0;
 }

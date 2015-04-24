@@ -35,7 +35,7 @@ App.populateDatabase = function(setName){
 				App.indexesLeft = App.pairDatabase.length;
 			}
 		}
-		xmlhttp.open("GET","getpairs.php?id=" + setName, true);
+		xmlhttp.open("GET","./includes/getpairs.php?id=" + setName, true);
 		xmlhttp.send();
 	}
 	return true;

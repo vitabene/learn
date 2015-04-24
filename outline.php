@@ -17,10 +17,10 @@ require './includes/init.php';
     </nav>
 
     <main class="main">
-		<ul id="sortable">
+		<ul id="sortable" <?php echo "data-set='" . urlencode($_GET['id']) . "' "; ?>>
 		</ul>
 		<button class="check">check</button>
     </main>
-	<script src="./js/order.js"></script>
+	<script src="./js/build/outline.js"></script>
 </body>
 </html>
