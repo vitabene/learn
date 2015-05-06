@@ -13,7 +13,7 @@ a {
 }
 //styles
 body {
-	background: url('../assets/skulls.png');
+	background: url('../assets/grey.png');
 	font-family: 'Raleway','Open Sans', sans-serif;
 	position: absolute;
 	width: 100%;
@@ -23,28 +23,30 @@ body {
 	letter-spacing: 3px;
 	word-spacing: 8px;
 	text-shadow: 0px 0px 3px #000;
-	color: #C61716;
+	color: darken(#C61716, 50%);
+	// border-top: 5px lighten(#f2f2f2, 10%) dashed;
 	text-transform: uppercase;
-	border-bottom: 5px darken(#f2f2f2, 10%) dashed;
+	// border-bottom: 5px lighten(#f2f2f2, 10%) dashed;
 }
 .subheading {
 	padding: 30px;
 	letter-spacing: 3px;
 	word-spacing: 8px;
 	text-shadow: 0px 0px 3px #000;
-	color: #C61716;
-	border-top: 5px darken(#f2f2f2, 10%) dashed;
+	color: darken(#C61716, 50%);
+	// border-top: 5px lighten(#f2f2f2, 10%) dashed;
 	text-transform: lowercase;
 }
 .main {
-  background:rgba(255,255,255,0.6);
-  width: 80%;
-  margin-left: 10%;
+  background:rgba(lighten(#F3D657, 10%), 0.5);
+  width: 65%;
+  margin-left: 17.5%;
   margin-top: 80px;
   height: auto;
   overflow: hidden;
   border-radius: 10px;
   text-align: center;
+  margin-bottom: 20px;
   & div {
   	margin: 0;
   	padding: 20px;
@@ -132,13 +134,14 @@ button {
 }
 #message {
 	position: absolute;
-	width: 80%;
-	@include cell(#EE6C6C);
+	width: 65%;
+	@include cell(lighten(#EE6C6C, 20%));
 	display: block;
 	line-height: 35px;
 	font-size: large;
 	padding: 0px;
-	margin-top: -35px;
+	box-sizing: border-box;
+	margin-top: -30px;
 }
 #remove-message {
 	float: right;
@@ -146,4 +149,5 @@ button {
 	font-size: large;
 	line-height: 35px;
 	margin-right: 10px;
+	color: darken(#EE6C6C, 50%);
 }

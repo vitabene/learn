@@ -5,10 +5,11 @@
 /* INDEX PAGE */
 .set-tile {
   display: inline-block;
-  padding: 20px 30px;
+  padding: 30px;
   margin: 20px;
   border-radius: 3px;
-  background: lighten(#D0E9F7, 6%);
+  font-size: large;
+  background: lighten(#43BE28, 36%);
   @include box-shadow(0.5px, 0.5px, 4px, .5px);
 }
 .set-tile:hover, .plus:hover, button:hover, .add-value:hover, .plus-set:hover, input[type='submit']:hover, .add-key:hover {
@@ -22,9 +23,6 @@
   &::after {
     @include box-shadow(0px, 0px, 1px, 0px);
   }
-}
-.bottom-border {
-    border-bottom: 5px darken(#f2f2f2, 10%) dashed;
 }
 /* RESULTS PAGE */
 .main.results {
@@ -137,7 +135,7 @@ th,td {
     margin-left: 20%;
   }
   .cell {
-    @include cell(lighten(#9FE2FD, 10%));
+    @include cell(lighten(#9FE2FD, 40%));
     display: block;
     margin: 10px 0;
     cursor: pointer;

@@ -15,33 +15,37 @@ require './includes/init.php';
     </nav>
 
     <main class="main">
-        <div class="heading">
-            <h1>connect</h1>
-        </div>
-        <?php
-        echo "<ul class='bottom-border'>";
-        $set_names = Db::queryAll("SELECT * FROM set_names");
-        foreach ($set_names as $set) {
-            echo "<a class='set-tile' href='connect.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
-        }
-        echo "</ul>";
-        ?>
-
-        <div class="heading">
-            <h1>outline</h1>
-        </div>
-        <?php
-        echo "<ul>";
-        $set_names = Db::queryAll("SELECT * FROM outlines");
-        foreach ($set_names as $set) {
-            echo "<a class='set-tile' href='outline.php?id=" . urlencode($set['id']) ."'><li>" . $set['name'] . "</li></a>";
-        }
-        echo "</ul>";
-        ?>
+        <section class="connect">
+            <div class="heading">
+                <h1>connect the dots</h1>
+            </div>
+            <?php
+            echo "<ul>";
+            $set_names = Db::queryAll("SELECT * FROM set_names");
+            foreach ($set_names as $set) {
+                echo "<a class='set-tile' href='connect.php?id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+            }
+            echo "</ul>";
+            ?>
+        </section>
+        <section class="outline">
+            <div class="heading">
+                <h1>memorize the outline</h1>
+            </div>
+            <?php
+            echo "<ul>";
+            $set_names = Db::queryAll("SELECT * FROM outlines");
+            foreach ($set_names as $set) {
+                echo "<a class='set-tile' href='outline.php?id=" . urlencode($set['id']) ."'><li>" . $set['name'] . "</li></a>";
+            }
+            echo "</ul>";
+            ?>
+        </section>
         <div class="subheading">
             <h2>create your own set</h2>
             <a href="set.php?add_set"><span class="plus-set"></span></a>
         </div>
+
     </main>
 
 </body>
