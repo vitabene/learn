@@ -282,31 +282,31 @@ App.init = function(){
 	//disabled for smooth testing
 	/* window.onbeforeunload = function(e) {
 	    return "Sure you want to leave?";
-	}*/
+	  }*/
 
-	App.messageParent = byTag('main')[0];
-	App.lineParent = byId("pair-list");
-	App.populateDatabase(App.lineParent.dataset.set);
-	App.startButton = document.createElement("button"), App.checkButton = document.createElement("button");
-	App.startButton.innerHTML = "start";
-	App.startButton.style.marginBottom = '50px';
-	App.checkButton.innerHTML = "check";
-	App.lineParent.appendChild(App.startButton);
+	  App.messageParent = byTag('main')[0];
+	  App.lineParent = byId("pair-list");
+	  App.populateDatabase(App.lineParent.dataset.set);
+	  App.startButton = document.createElement("button"), App.checkButton = document.createElement("button");
+	  App.startButton.innerHTML = "start";
+	  App.startButton.style.marginBottom = '50px';
+	  App.checkButton.innerHTML = "check";
+	  App.lineParent.appendChild(App.startButton);
 
-	App.lineParent.addEventListener("click", function(e) {
-		if (e.target) {
-			if (e.target.nodeName === "LI") App.connect(e.target);
-			else if (e.target === App.startButton) {
-				removeNodesWithClass("heading");
-				App.startButton.style.display = "none";
-				App.lineParent.appendChild(App.checkButton);
-				App.generatePairs();
-				App.time = new Date().getTime();
-			} else if (e.target === App.checkButton) {
-				App.checkPairs();
-			}
-		}
-	}, false);
-	return true;
-}
-document.addEventListener("DOMContentLoaded", App.init);
+	  App.lineParent.addEventListener("click", function(e) {
+	  	if (e.target) {
+	  		if (e.target.nodeName === "LI") App.connect(e.target);
+	  		else if (e.target === App.startButton) {
+	  			removeNodesWithClass("heading");
+	  			App.startButton.style.display = "none";
+	  			App.lineParent.appendChild(App.checkButton);
+	  			App.generatePairs();
+	  			App.time = new Date().getTime();
+	  		} else if (e.target === App.checkButton) {
+	  			App.checkPairs();
+	  		}
+	  	}
+	  }, false);
+	  return true;
+	}
+	document.addEventListener("DOMContentLoaded", App.init);

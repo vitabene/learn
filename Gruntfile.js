@@ -9,19 +9,10 @@ module.exports = function(grunt) {
 				banner: '/* Vitezslav Benes 2015*/\n'
 			},
 			target: {
-				// files: [{
-		  //         expand: true,
-		  //         src: 'js/build/*.js',
-		  //         dest: './'
-		  //         expand: true,
-		  //         src: '**/*.js',
-		  //         dest: 'js/build/',
-		  //         cwd: 'js/build/'
-		  //     }]
-		      	files: {
-		            'js/build/connect.js': 'js/build/application.js',
-		            'js/build/outline.js': 'js/build/order.js'
-		        }
+				files: {
+					'js/build/connect.js': 'js/build/application.js',
+					'js/build/outline.js': 'js/build/order.js'
+				}
 			}
 		},
 		// jshint: {
@@ -43,8 +34,8 @@ module.exports = function(grunt) {
 		},
 		copy: {
 			main: {
-			    src: 'js/order.js',
-			    dest: 'js/build/order.js',
+				src: 'js/order.js',
+				dest: 'js/build/order.js',
 			}
 		},
 		imagemin: {
@@ -72,12 +63,12 @@ module.exports = function(grunt) {
 		clean: ['assets/build/', 'js/build/', 'css/style.css'],
 		autoprefixer: {
 			options: {
-  		    	browsers: ['last 2 versions', 'ie 7', 'ie 8', 'ie 9']
-  			},
-  			css: {
-	  		    src: 'css/style.css'
-  			}
-  		},
+				browsers: ['last 2 versions', 'ie 7', 'ie 8', 'ie 9']
+			},
+			css: {
+				src: 'css/style.css'
+			}
+		},
 		sass: {
 			dist: {
 				options: {
@@ -91,7 +82,7 @@ module.exports = function(grunt) {
 
 	});
 
-	require('load-grunt-tasks')(grunt);
+require('load-grunt-tasks')(grunt);
 
-	grunt.registerTask('default', ['clean', 'sass', 'concat', 'copy', 'uglify']);
+grunt.registerTask('default', ['clean', 'sass', 'concat', 'copy', 'uglify']);
 }

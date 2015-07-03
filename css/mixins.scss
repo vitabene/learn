@@ -4,7 +4,7 @@
 @mixin rotate($deg) {
   transform: rotate($deg);
 }
-%plus-base { // placeholder selector (for use with @extend)
+%plus-base {
     display: block;
     position: relative;
 
@@ -13,7 +13,6 @@
         content: "";
     }
 }
-
 @mixin plus-icon($width, $lineWidth, $color, $borderRadius) {
     @extend %plus-base;
     margin: ($width - $lineWidth)/2 $lineWidth/2;
