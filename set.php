@@ -60,7 +60,6 @@ if (!empty($_POST)) {
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -68,95 +67,95 @@ if (!empty($_POST)) {
     <title>Learn</title>
     <?php require 'includes/head.php'; ?>
 </head>
-
 <body id="learn">
     <nav>
         <?php require 'includes/nav.php'; ?>
     </nav>
-
     <main class="main view">
-
-        <?php
-        //if nothing's set in get
-        if (empty($_GET)) {
-
-            echo "<div class='heading'><h1>view</h1></div>";
-            echo "<ul>";
+    <?php
+    //if nothing's set in get
+    if (empty($_GET)) { ?>
+        <div class='heading'>
+            <h1>view</h1>
+        </div>
+        <ul>
+            <?php
             $set_names = Db::queryAll("SELECT * FROM set_names");
             foreach ($set_names as $set) {
-                echo "<a class='set-tile' href='set.php?view_id=" . urlencode($set['id']) ."'><li>" . $set['set_name'] . "</li></a>";
+            ?>
+                <a class='set-tile' href=<?php echo "'set.php?view_id=" . urlencode($set['id']) ."'" ?>><li><?php echo $set['set_name'] ?></li></a>
+            <?php
             }
-            echo "</ul>";
-            echo '<div class="subheading">
-            <h2>create your own set</h2>
-            <a href="set.php?add_set"><span class="plus-set"></span></a>
-            </div>';
-        }
-        //default end
-
-        //view set
-        elseif (!empty($_GET['view_id'])) {
-            $set_id = $_GET['view_id'];
-            $set = Db::queryOne("SELECT * FROM set_names WHERE id=?", $set_id);
-            $pairs = Db::queryAll("SELECT * FROM key_to_values WHERE set_id=?", $set_id);
-
-            echo "<div class='heading'><h1>" . $set['set_name'] . "</h1></div>";
-
-            echo "<table id='pair-table'><thead><tr><th>Key</th><th>Values</th></tr></thead><tbody>";
-
-            foreach ($pairs as $keyvaluepair) {
-                $values_array = json_decode($keyvaluepair['values']);
-                echo '<tr>
-                    <td class="key-td"><span class="key-cell">' . $keyvaluepair['key'] . '<span></td>
-                    <td class="value-td">';
-                foreach ($values_array as $value) {
-                    echo '<span class="value-cell">' . $value . '</span>';
-                }
-                // echo "<input type='text' name='values_for_key' class='additional-values'>";
-                echo '<span class="add-value" data-key="' . $keyvaluepair['key'] .'" data-set-id="' . $set_id . '"></span></td></tr>';
-
-            }
-
-            //last line
-            echo '<tr>
+            ?>
+        </ul>
+        <div class="subheading">
+        <h2>create your own set</h2>
+        <a href="set.php?add_set">
+            <span class="plus-set"></span>
+        </a>
+    </div>
+    <?php } elseif (!empty($_GET['view_id'])) {
+        $set_id = $_GET['view_id'];
+        $set = Db::queryOne("SELECT * FROM set_names WHERE id=?", $set_id);
+        $pairs = Db::queryAll("SELECT * FROM key_to_values WHERE set_id=?", $set_id);
+        ?>
+        <div class='heading'>
+            <h1><?php echo $set['set_name'] ?></h1>
+        </div>
+        <table id='pair-table'>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Values</th>
+                </tr>
+            </thead>
+            <tbody>
+        <?php
+        foreach ($pairs as $keyvaluepair) {
+            $values_array = json_decode($keyvaluepair['values']);
+            ?>
+            <tr>
+                <td class="key-td"><span class="key-cell"><?php echo $keyvaluepair['key'] ?><span></td>
+                <td class="value-td">
+                    <?php
+                    foreach ($values_array as $value) {?>
+                        <span class="value-cell"><?php echo $value ?></span>
+                    <?php } ?>
+                    <span class="add-value" data-key=<?php echo "'" . $keyvaluepair['key'] . "'"?>data-set-id=<?php echo "'" . $set_id . "'"?>></span>
+                </td>
+            </tr>
+            <?php } ?>
+            <tr>
                 <td class="key-td">
-                    <a id="addKey" data-set-id="' . $set_id . '">
+                    <a id="addKey" data-set-id=<?php echo "'" . $set_id . "'" ?>>
                         <span class="plus-key"></span>
                     </a>
                 </td>
-                <td class="value-td">
-                </td>
-            </tr></tbody></table>';
-
-            if (!empty($error)) {
-                //different styling needed
-                echo "<div class='heading'><h4>" . $error . "</h4></div>";
-                $error = "";
-            }
-        }
-        //view set end
-
-        //add set
-        elseif (isset($_GET['add_set'])) { ?>
-            <div class="heading">
-                <h2>enter set name</h2>
-            </div>
-            <form class="add-set" action="" method="post">
-
-            <input type="text" name="new_set">
-            <input type="submit" value="submit">
-
-            </form>
+                <td class="value-td"></td>
+            </tr>
+            </tbody>
+        </table>
+    <?php } elseif (isset($_GET['add_set'])) { ?>
+    <div class="heading">
+        <h2>enter set name</h2>
+    </div>
+    <form class="add-set" action="" method="post">
+        <input type="text" name="new_set">
+        <input type="submit" value="submit">
+    </form>
+    <?php
+    }
+    if (!empty($error)) {
+        $error = ""; ?>
+        <div class='heading'>
+            <h4>
+                <?php echo $error ?>
+            </h4>
+        </div>
         <?php
-            if (!empty($error)) {
-                $error = "";
-                //different styling needed
-                echo "<div class='heading'><h4>" . $error . "</h4></div>";
-            }
-        }
-        //add set end
-        ?>
-    </main>
-    <script src="js/view.js"></script>
+    }
+    ?>
+</main>
+<script src="js/view.js"></script>
 </body>
 </html>

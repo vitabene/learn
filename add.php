@@ -28,32 +28,29 @@ if (isset($_POST['parent_text']) && isset($_POST['outline_text'])) {
     <nav>
         <?php require 'includes/nav.php'; ?>
     </nav>
-
     <main class="main">
-        <?php if (isset($_GET['outline'])) { ?>
-        <form action="" class="add-outline-text" method="post">
-            <select name="parent_text">
-                <?php
-                $parent = intval($_GET['outline']);
-                $texts = Db::queryAll('SELECT * FROM outline_texts WHERE outline_id=?', $parent);
-                $text_array = array();
-                foreach ($texts as $text) {
-                    $item = "<option value='" . $text['id'] . "'>" . $text['text'] . "</option>";
-                    array_push($text_array, $item);
-                }
-                $text_array = array_reverse($text_array);
-                foreach ($text_array as $texta) {
-                    echo $texta;
-                }
-                ?>
-                <option value="0">-- first item --</option>
-            </select>
-
-            <input type="text" name="outline_text">
-
-            <input type="submit" value="add">
-        </form>
-        <?php } else { ?>
+        <?php if (isset($_GET['outline'])): ?>
+            <form action="" class="add-outline-text" method="post">
+                <select name="parent_text">
+                    <?php
+                    $parent = intval($_GET['outline']);
+                    $texts = Db::queryAll('SELECT * FROM outline_texts WHERE outline_id=?', $parent);
+                    $text_array = array();
+                    foreach ($texts as $text) {
+                        $item = "<option value='" . $text['id'] . "'>" . $text['text'] . "</option>";
+                        array_push($text_array, $item);
+                    }
+                    $text_array = array_reverse($text_array);
+                    foreach ($text_array as $texta) {
+                        echo $texta;
+                    }
+                    ?>
+                    <option value="0">-- first item --</option>
+                </select>
+                <input type="text" name="outline_text">
+                <input type="submit" value="add">
+            </form>
+        <?php else ?>
             <form action="" method="get" class="add-outline">
                 <select name="outline">
                     <option value="">select outline</option>
@@ -64,17 +61,14 @@ if (isset($_POST['parent_text']) && isset($_POST['outline_text'])) {
                     }
                     ?>
                 </select>
-
                 <input type="submit" value="add">
             </form>
-
             <form class="add-outline" action="" method="post">
                 <label for="new_outline">new outline:</label>
                 <input type="text" name="new_outline">
                 <input type="submit" value="submit">
-
             </form>
-        <?php } ?>
+        <?php endif ?>
     </main>
 
 </body>
