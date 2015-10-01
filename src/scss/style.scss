@@ -1,0 +1,146 @@
+@import 'mixins';
+@import 'general';
+@import 'app';
+
+/* INDEX PAGE */
+.set-tile {
+  display: inline-block;
+  padding: 30px;
+  margin: 20px;
+  border-radius: 3px;
+  font-size: large;
+  background: lighten(#43BE28, 36%);
+  @include box-shadow(0.5px, 0.5px, 4px, .5px);
+}
+.set-tile:hover, .plus:hover, button:hover, .add-value:hover, .plus-set:hover, input[type='submit']:hover, .add-key:hover {
+  position: relative;
+  top: 1px;
+}
+.plus-set {
+  display: inline-block;
+  @include plus-icon(40px, 5px, #00a154, 5px);
+  @include box-shadow(0px, 0px, 1px, 0px);
+  &::after {
+    @include box-shadow(0px, 0px, 1px, 0px);
+  }
+}
+/* RESULTS PAGE */
+.main.results {
+  & .percent-score {
+    font-size: 50pt;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  & .score {
+    font-size: x-large;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  & .time {
+    font-size: large;
+    letter-spacing: 1.5px;
+    border-bottom: 5px darken(#f2f2f2, 10%) dashed;
+    padding-bottom: 15px;
+  }
+}
+/* PRACTISE PAGE */
+
+/* VIEW SETS PAGE */
+.main.view {
+  & table {
+    width: 80%;
+    margin: 10%;
+    table-layout: auto;
+    text-align: left;
+
+    & .value-td {
+      position: relative;
+    }
+    & .field {
+      height: 60px;
+      & .value-cell {
+        margin-top: -15px;
+        margin-bottom: 3px;
+      }
+    }
+    & .key-td {
+      position: relative;
+    }
+    & .value-cell {
+      @include cell(#A1FFD2);
+    }
+    & .key-cell {
+      @include cell(#9FE2FD);
+    }
+
+    & input {
+      &[type='text'] {
+        position: absolute;
+        display: inline-block;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+        width: 70%;
+      }
+      &[name='key_name'] {
+        margin-left: 10%;
+      }
+      &[name='values_for_key'] {
+        width: 75%;
+      }
+      &[type='submit'] {
+        width: 10%;
+        min-width: 5%;
+        padding: 0;
+        margin: 1.5px 3px;
+        float: right;
+      }
+      &.additional-values {
+        display: block;
+        margin: 0;
+      }
+    }
+  }
+  .add-value {
+    @include plus-icon(20px, 3px, #00a154, 10px);
+    cursor: pointer;
+    float: right;
+    margin-top: 15px;
+    margin-right: -5px;
+  }
+  #addKey {
+    float: left;
+    width: 20px;
+    cursor: pointer;
+  }
+  .plus-key {
+    float: left;
+    @include plus-icon(20px, 3px, #00a154, 5px);
+  }
+  .add-set {
+    padding: 50px;
+  }
+}
+table, th, td {
+  border: 2px darken(#f2f2f2, 10%) dashed;
+  border-collapse: collapse;
+}
+th,td {
+  padding: 10px;
+}
+#order {
+  ul {
+    width: 60%;
+    margin-left: 20%;
+  }
+  .cell {
+    @include cell(lighten(#9FE2FD, 40%));
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+}
+.add-outline, .add-outline-text {
+  padding: 30px 0;
+}

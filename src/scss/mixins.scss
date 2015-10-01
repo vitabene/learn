@@ -1,0 +1,41 @@
+@mixin box-shadow($x, $y, $blur, $spread) {
+  box-shadow:         $x $y $blur $spread rgba(0,0,0,0.75);
+}
+@mixin rotate($deg) {
+  transform: rotate($deg);
+}
+%plus-base {
+    display: block;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        content: "";
+    }
+}
+@mixin plus-icon($width, $lineWidth, $color, $borderRadius) {
+    @extend %plus-base;
+    margin: ($width - $lineWidth)/2 $lineWidth/2;
+    background: $color;
+    height: $lineWidth;
+    width: $width - $lineWidth;
+    border-radius: $borderRadius;
+    &::after {
+        background: $color;
+        height: $width - $lineWidth;
+        width: $lineWidth;
+        border-radius: $borderRadius;
+        left: ($width/2) - $lineWidth;
+        top: -($width/2) + $lineWidth;
+    }
+}
+@mixin cell($color) {
+    text-align: center;
+    background: $color;
+    display: inline-block;
+    border: 1px darken($color, 50%) dotted;
+    padding: 3px 10px;
+    margin-top: 5px;
+    margin-right: 1px;
+    border-radius: 3px;
+}

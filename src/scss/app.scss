@@ -1,0 +1,66 @@
+#pair-list {
+  position: relative;
+  overflow: hidden;
+  height: auto;
+  margin-top: 70px;
+  padding: 0;
+  & li {
+    background: white;
+    padding: 3px;
+    margin: 8px 35px;
+    width: 50%;
+    z-index: 100;
+    font-size: medium;
+    cursor: pointer;
+    letter-spacing: .1px;
+    border-radius: 3px;
+    @include box-shadow(0.5px, 0.5px, 0.5px, 0.5px);
+  }
+}
+#leftcol, #rightcol {
+  position: absolute;
+  float: left;
+  width: 50%;
+  margin: 0;
+}
+#rightcol {
+  float: right;
+  margin-left: 50%;
+}
+#leftcol li {
+  float: right;
+}
+#rightcol li {
+  float: left;
+}
+.line {
+  position: absolute;
+  background-color: #5E88D0;
+  height: 2px;
+  display: block;
+  border-radius: 1px;
+  z-index: 1;
+  @include box-shadow(0.2px, 0.2px, 0.2px, 0.2px);
+}
+.line-correct {
+  position: absolute;
+  background-color: #17BB1F;
+  height: 2px;
+  display: block;
+  border-radius: 1px;
+}
+.selected {
+  position: relative;
+  bottom: 3px;
+  background: lighten(#668CD6, 20%) !important;
+  color: darken(#FFFC75, 90%);
+  @include box-shadow(0px, 0px, 1px, 1px);
+}
+.mistake {
+  background: #D92424 !important;
+  color: white;
+}
+.correct {
+  background: #17BB1F !important;
+  color: white;
+}
