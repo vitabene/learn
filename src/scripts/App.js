@@ -13,7 +13,7 @@ var App = {
 	message: {},
 	time: 0
 };
-
+// loading pairs from db
 App.populateDatabase = function(setName){
 	if (setName == "") {
 		console.log("no arg passed");
@@ -186,7 +186,7 @@ App.createLine = function() {
 	lineElement.className = "line";
 
 	var addStyles = function(line) {
-		//the -1 and +1 are there just for aesthetic reason
+		//the -1 and +1 are there just for aesthetic purposes
 		line.style.width = round(length - 1, 1) + "px";
 		line.style.marginTop = round(position.y, 1) + "px";
 		line.style.marginLeft = round(position.x + 1, 1) + "px";

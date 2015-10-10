@@ -1,5 +1,4 @@
 (function() {
-  var app = angular.module('anguLearn', []);
+  var AnguLearn = angular.module('AnguLearn', []);
 
-  
 })();
